@@ -34,3 +34,15 @@ Website root
 * Opening hours and address, on the other hand, should be definitely placed into a `footer` since they are purely ancillary to the main content of the website.
 * The remaining part of the main page and the feedback page go into a `section`, because `article` does not fit and `div` is too generic.
 * The remaining part of each of the three product pages consists of a sequence of `div`s, all of them nested inside a `section`. In theory, since every available product is presented as a discrete unit one might consider using `article`, but to me the semantics is just not right (a product for purchase is not an article). `section` also doesn't cut it, semantically, because sections need to come together to form a whole - and as I said products form discrete units that do not depend on each other. So in the end, only the generic `div` is the right choice.
+
+# Development
+
+I keep the files of this project under source control using git. Check out the project home on GitHub: https://github.com/herzbube/webgrundlagen-tonyspizzafactory
+
+I'm working on Mac OS X. The tools that I am using are:
+
+* WebStorm, a JetBrains product that I'm allowed to use for free under an educational license. Thanks.
+* git on the command line
+* TextWrangler, a free-to-use text editor
+* Firefox and Safari (this being a web programming project, this browser list probably should be longer 😇)
+* My trusted wiki to keep notes about learning [HTML](https://wiki.herzbube.ch/index.php/LearningHTML), [CSS](https://wiki.herzbube.ch/index.php/LearningCSS) and [JavaScript](https://wiki.herzbube.ch/index.php/LearningJavaScript). **Note**: If you want to access the wiki without annoying security warnings from your browser, you can install the [CAcert root certificates](http://www.cacert.org/index.php?id=3) in your browser's trust store.
