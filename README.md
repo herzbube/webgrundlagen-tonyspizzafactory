@@ -46,3 +46,9 @@ I'm working on Mac OS X. The tools that I am using are:
 * TextWrangler, a free-to-use text editor
 * Firefox and Safari (this being a web programming project, this browser list probably should be longer 😇)
 * My trusted wiki to keep notes about learning [HTML](https://wiki.herzbube.ch/index.php/LearningHTML), [CSS](https://wiki.herzbube.ch/index.php/LearningCSS) and [JavaScript](https://wiki.herzbube.ch/index.php/LearningJavaScript). **Note**: If you want to access the wiki without annoying security warnings from your browser, you can install the [CAcert root certificates](http://www.cacert.org/index.php?id=3) in your browser's trust store.
+
+# Useful commands
+
+To create a zip archive from the current git HEAD for submission, use the following command:
+
+    git archive --format=zip --prefix=WebG-Projekt1-studentname/ HEAD >WebG-Projekt1-studentname.zip
