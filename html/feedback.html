@@ -22,27 +22,51 @@
     <form method="post" action="http://example.com/foo.php">
         <p>How do you like our pizza?</p>
         <ul>
-            <li><label><input type="radio" name="rating-pizzas" value="awesome" />Awesome</label></li>
-            <li><label><input type="radio" name="rating-pizzas" value="good" />Good</label></li>
-            <li><label><input type="radio" name="rating-pizzas" value="okay" />Okay</label></li>
-            <li><label><input type="radio" name="rating-pizzas" value="poor" />Poor</label></li>
+            <li>
+                <input id="rating-pizzas-awesome" type="radio" name="rating-pizzas" value="awesome" />
+                <label for="rating-pizzas-awesome">Awesome</label>
+            </li>
+            <li>
+                <input id="rating-pizzas-good" type="radio" name="rating-pizzas" value="good" />
+                <label for="rating-pizzas-good">Good</label>
+            </li>
+            <li>
+                <input id="rating-pizzas-okay" type="radio" name="rating-pizzas" value="okay" />
+                <label for="rating-pizzas-okay">Okay</label>
+            </li>
+            <li>
+                <input id="rating-pizzas-poor" type="radio" name="rating-pizzas" value="poor" />
+                <label for="rating-pizzas-poor">Poor</label>
+            </li>
         </ul>
 
         <p>What do you think about our prizes?</p>
         <ul>
-            <li><label><input type="radio" name="rating-prices" value="fair" />Fair</label></li>
-            <li><label><input type="radio" name="rating-prices" value="okay" />Okay</label></li>
-            <li><label><input type="radio" name="rating-prices" value="expensive" />Expensive</label></li>
+            <li>
+                <input id="rating-prices-fair" type="radio" name="rating-prices" value="fair" />
+                <label for="rating-prices-fair">Fair</label>
+            </li>
+            <li>
+                <input id="rating-prices-okay" type="radio" name="rating-prices" value="okay" />
+                <label for="rating-prices-okay">Okay</label>
+            </li>
+            <li>
+                <input id="rating-prices-expensive" type="radio" name="rating-prices" value="expensive" />
+                <label for="rating-prices-expensive">Expensive</label>
+            </li>
         </ul>
 
         <p>
-            <label>Your name? <input type="text" name="customer-name" placeholder="Enter your name here" /></label>
+            <label for="customer-name">Your name?</label>
+            <input id="customer-name" type="text" name="customer-name" placeholder="Enter your name here" />
         </p>
         <p>
-            <label>Your e-mail address? <input type="email" name="customer-email" placeholder="Enter your e-mail address here" /></label>
+            <label for="customer-email">Your e-mail address?</label>
+            <input id="customer-email" type="email" name="customer-email" placeholder="Enter your e-mail address here" />
         </p>
         <p>
-            <label>What can we do better? <textarea name="suggestions" placeholder="Enter your suggestions here"></textarea></label>
+            <label for="suggestions">What can we do better?</label>
+            <textarea id="suggestions" name="suggestions" placeholder="Enter your suggestions here"></textarea>
         </p>
 
         <p>
