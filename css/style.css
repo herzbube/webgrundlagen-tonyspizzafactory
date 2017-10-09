@@ -139,6 +139,34 @@ body {
         background-color: cornflowerblue;
     }
 
+    /*
+        -----------------------------------------------------------------------
+        Series of rules that define navigation links' appearance
+        -----------------------------------------------------------------------
+     */
+    /* Styles for the link to the website root */
+    #navigation-website-root a {
+        text-decoration: none;
+    }
+    #navigation-website-root a:link,
+    #navigation-website-root a:visited {
+        color: black;
+    }
+    #navigation-website-root a:hover,
+    #navigation-website-root a:focus,
+    #navigation-website-root a:active {
+        color: white;
+    }
+    /* Styles for the links to the main pages */
+    #navigation-main-pages a:link,
+    #navigation-main-pages a:visited {
+        color: #0030f0;
+    }
+    #navigation-main-pages a:hover,
+    #navigation-main-pages a:focus,
+    #navigation-main-pages a:active {
+        color: white;
+    }
 }
 
 /*
