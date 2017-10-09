@@ -1,1 +1,28 @@
-/* Empty style sheet */
+/*
+    This style sheet uses media queries to implement a responsive design.
+    At the top level there are several media queries that generate
+    layout breakpoints for specific screen widths.
+
+    TODO: Currently there is only one breakpoint for distinguishing between
+          mobile phones in portrait, and everything else.
+ */
+
+/*
+    The rules within this media query are for smartphones, typically in
+    portrait mode. They also serve as default rules if not overridden by
+    rules within other media queries.
+    Note: This media query is not really necessary, but I like to have
+    it around so that all rules in this style sheet are indented on the
+    same level.
+ */
+@media screen and (min-width: 0px)
+{
+}
+
+/*
+    The rules within this media query are for larger smartphones, tablets
+    and desktops.
+ */
+@media screen and (min-width: 768px)
+{
+}
