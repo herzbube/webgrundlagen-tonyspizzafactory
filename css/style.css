@@ -8,6 +8,23 @@
  */
 
 /*
+    -----------------------------------------------------------------------
+    Global font properties. The @import rule cannot appear inside media
+    queries. I like to keep things together so I'm specifying the
+    font-family property here, too.
+    Note: The Ubuntu font is a libre/open font. The license is available
+    here: http://font.ubuntu.com/ufl/. The licence's intent is clearly
+    benign, but as the Wikipedia page [1] states a number of important
+    organizations don't consider the license "free".
+    [1] https://en.wikipedia.org/wiki/Ubuntu_%28typeface%29
+    -----------------------------------------------------------------------
+ */
+@import url('https://fonts.googleapis.com/css?family=Ubuntu');
+body {
+    font-family: 'Ubuntu', sans-serif;
+}
+
+/*
     The rules within this media query are for smartphones, typically in
     portrait mode. They also serve as default rules if not overridden by
     rules within other media queries.
@@ -67,12 +84,13 @@
     footer {
         position: relative;
         /*
-            4em for the actual lines, and 1em each for the top/bottom
-            spacing around the links. If you change this value, also
+            4em for the actual lines, 1em each for the top/bottom
+            spacing around the links, and an additional 1em to
+            compensate for the Ubuntu font. If you change this value, also
             change the value of the "top" property in the next rule.
             Don't specify pixels in case the font changes.
          */
-        height: 6em;
+        height: 7em;
     }
     #opening-hours, #customer-comment, #postal-address {
         position: absolute;
