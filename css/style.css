@@ -311,6 +311,77 @@ body {
         /* This works because the image is an inline element */
         text-align: center;
     }
+
+    /*
+        -----------------------------------------------------------------------
+        General product styles
+        -----------------------------------------------------------------------
+     */
+    .product {
+        /* TODO: Fix this. */
+        width: 300px;
+        padding: 1em;
+    }
+    .product-ingredients {
+        /* Display the ingredients list in a smaller font */
+        font-size: 0.75em;
+    }
+    .cart-image {
+        /* TODO: Fix this. */
+        width: 1.2em;
+        height: 1.2em;
+    }
+
+    /*
+        -----------------------------------------------------------------------
+        Pizza page styles
+        -----------------------------------------------------------------------
+     */
+    .pizza .cart-line p {
+        display: inline;
+        margin: 0;
+    }
+    .pizza .cart-line .product-name {
+        float: left;
+    }
+    .pizza .cart-line .product-price-and-cart {
+        float: right;
+    }
+    .pizza .product-ingredients {
+        clear: both;
+    }
+
+    /*
+        -----------------------------------------------------------------------
+        Salad page styles
+        -----------------------------------------------------------------------
+     */
+    .salad .cart-line select, .salad .cart-line p {
+        display: inline;
+        margin: 0;
+    }
+    .salad .cart-line .salad-dressing {
+        float: left;
+    }
+    .salad .cart-line .product-price-and-cart {
+        float: right;
+    }
+
+    /*
+        -----------------------------------------------------------------------
+        Soft drinks page styles
+        -----------------------------------------------------------------------
+     */
+    .soft-drink .cart-line select, .soft-drink .cart-line p {
+        display: inline;
+        margin: 0;
+    }
+    .soft-drink .cart-line .drink-size {
+        float: left;
+    }
+    .soft-drink .cart-line .product-price-and-cart {
+        float: right;
+    }
 }
 
 /*
