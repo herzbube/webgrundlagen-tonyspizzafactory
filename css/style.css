@@ -92,6 +92,15 @@ body {
         padding: 0;
         margin: 0;
     }
+    #navigation-main-pages a {
+        /*
+            The default spacing between links is too cramped, so let's
+            be a bit more generous and add some padding. Don't add
+            padding on both sides or the link block will be shifted
+            away from the right edge of the nav block.
+         */
+        padding-left: 0.5em;
+    }
 
     /*
         -----------------------------------------------------------------------
