@@ -287,4 +287,62 @@ body {
  */
 @media screen and (min-width: 768px)
 {
+    /*
+        -----------------------------------------------------------------------
+        Rules that undo the dropdown configuration
+        These rules must appear early so that we can override
+        and re-style further down.
+        Unfortunately we can't use the "unset" keyword because browser support
+        for that is insufficient. So it seems that the only thing we can do is
+        to explicitly set default values.
+        -----------------------------------------------------------------------
+     */
+    .dropdown-container:before {
+        content: "";
+    }
+    .dropdown-container {
+        display: block;
+    }
+    .dropdown-content {
+        position: static;
+        top: auto;
+        right: auto;
+        background-color: transparent;
+        padding: 0;
+        margin: 0;
+        min-width: 0;
+        box-shadow: none;
+        z-index: auto;
+        display: block;
+    }
+    .dropdown-container:hover .dropdown-content {
+        display: block;
+    }
+    .dropdown-content a {
+        text-decoration: underline;
+        display: inline;
+    }
+    .dropdown-content a:hover {
+        background-color: transparent;
+    }
+
+    /*
+        -----------------------------------------------------------------------
+        Rules that re-style the navigation elements that previously
+        were in a dropdown.
+        -----------------------------------------------------------------------
+     */
+    #navigation-main-pages-container, #navigation-main-pages, #navigation-main-pages li {
+        display: inline;
+    }
+
+    #navigation-main-pages a {
+        /*
+            The default spacing between links is too cramped, so let's
+            be a bit more generous and add some padding. Don't add
+            padding on both sides or the link block will be shifted
+            away from the right edge of the nav block.
+         */
+        padding-left: 0.5em;
+    }
 }
