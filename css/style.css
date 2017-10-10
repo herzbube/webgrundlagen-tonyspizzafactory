@@ -318,6 +318,12 @@ body {
         -----------------------------------------------------------------------
      */
     .product {
+        float: left;
+    }
+    .products + footer {
+        clear: left;
+    }
+    .product {
         /* TODO: Fix this. */
         width: 300px;
         padding: 1em;
