@@ -138,7 +138,11 @@ body {
         -----------------------------------------------------------------------
      */
     .dropdown-container:before {
-        content: "Dropdown";
+        /*
+            Image source: http://thenounproject.com/term/menu/36901/ (Menu by John Caserta)
+            Image slightly edited by me.
+         */
+        content: url('../image/noun_36901_cc.svg');
     }
     .dropdown-container {
         display: inline-block;
