@@ -36,6 +36,23 @@ body {
 {
     /*
         -----------------------------------------------------------------------
+        Styles common to navigation and footer blocks
+        -----------------------------------------------------------------------
+    */
+    nav, footer {
+        border: 1px solid;
+        background-color: cornflowerblue;
+        /*
+            The default line height looks a bit cramped, so let's be generous
+            and increase the line height very slightly.
+            Note: This has an influence on navigation and footer heights, and
+            on the positioning of the elements within these blocks.
+         */
+        line-height: 1.3em;
+    }
+
+    /*
+        -----------------------------------------------------------------------
         Series of rules that control positioning of navigation elements
         -----------------------------------------------------------------------
      */
@@ -47,7 +64,7 @@ body {
             change the value of the "top" property in the next rule.
             Don't specify pixels in case the font changes.
          */
-        height: 3em;
+        height: 3.9em;
     }
     #navigation-website-root, #navigation-main-pages {
         position: absolute;
@@ -57,7 +74,7 @@ body {
             links are more or less vertically centered within the
             nav element.
          */
-        top: 1em;
+        top: 1.3em;
         list-style-type: none;
     }
     #navigation-website-root {
@@ -85,12 +102,11 @@ body {
         position: relative;
         /*
             4em for the actual lines, 1em each for the top/bottom
-            spacing around the links, and an additional 1em to
-            compensate for the Ubuntu font. If you change this value, also
+            spacing around the links. If you change this value, also
             change the value of the "top" property in the next rule.
             Don't specify pixels in case the font changes.
          */
-        height: 7em;
+        height: 7.8em;
     }
     #opening-hours, #customer-comment, #postal-address {
         position: absolute;
@@ -100,7 +116,7 @@ body {
             elements that use up the maximum number of lines are more
             or less vertically centered within the footer element.
          */
-        top: 1em;
+        top: 1.3em;
     }
     #opening-hours {
         left: 1em;
@@ -127,16 +143,6 @@ body {
     footer, footer p {
         padding: 0;
         margin: 0;
-    }
-
-    /*
-        -----------------------------------------------------------------------
-        Styles common to navigation and footer blocks
-        -----------------------------------------------------------------------
-    */
-    nav, footer {
-        border: 1px solid;
-        background-color: cornflowerblue;
     }
 
     /*
