@@ -301,6 +301,16 @@ body {
     h1 {
         text-align: center;
     }
+
+    /*
+        -----------------------------------------------------------------------
+        Front page styles
+        -----------------------------------------------------------------------
+     */
+    #ambience-image {
+        /* This works because the image is an inline element */
+        text-align: center;
+    }
 }
 
 /*
