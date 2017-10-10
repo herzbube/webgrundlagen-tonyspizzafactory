@@ -277,6 +277,15 @@ body {
 
     /*
         -----------------------------------------------------------------------
+        Hide some footer elements on narrow screens
+        -----------------------------------------------------------------------
+     */
+    #customer-comment, #postal-address {
+        display: none;
+    }
+
+    /*
+        -----------------------------------------------------------------------
         Footer styles
         -----------------------------------------------------------------------
      */
@@ -348,5 +357,14 @@ body {
             away from the right edge of the nav block.
          */
         padding-left: 0.5em;
+    }
+
+    /*
+        -----------------------------------------------------------------------
+        Re-style some footer elements so that they are shown on wide screens
+        -----------------------------------------------------------------------
+     */
+    #customer-comment, #postal-address {
+        display: block;
     }
 }
