@@ -312,6 +312,18 @@ body {
         text-align: center;
     }
 
+    .front .product-category {
+        float: left;
+    }
+    .front + footer {
+        clear: left;
+    }
+    .front .product-category {
+        /* TODO: Fix this. */
+        width: 300px;
+        padding: 1em;
+    }
+
     /*
         -----------------------------------------------------------------------
         General product styles
