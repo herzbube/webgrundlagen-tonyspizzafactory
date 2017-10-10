@@ -53,7 +53,7 @@ body {
 
     /*
         -----------------------------------------------------------------------
-        Series of rules that control positioning of navigation elements
+        Rules that control positioning of navigation elements
         -----------------------------------------------------------------------
      */
     nav {
@@ -66,7 +66,7 @@ body {
          */
         height: 3.9em;
     }
-    #navigation-website-root, #navigation-main-pages {
+    #navigation-website-root, #navigation-main-pages-container {
         position: absolute;
         /*
             This must match the top spacing allotted by the "height"
@@ -75,36 +75,153 @@ body {
             nav element.
          */
         top: 1.3em;
-        list-style-type: none;
     }
     #navigation-website-root {
         left: 1em;
     }
-    #navigation-main-pages {
+    #navigation-main-pages-container {
         right: 1em;
-    }
-    /* Remove vertical stacking of block elements */
-    nav ul, nav li {
-        display: inline;
-    }
-    /* Reset padding and margin for a number of nav elements */
-    nav, nav ul, nav li {
-        padding: 0;
-        margin: 0;
-    }
-    #navigation-main-pages a {
-        /*
-            The default spacing between links is too cramped, so let's
-            be a bit more generous and add some padding. Don't add
-            padding on both sides or the link block will be shifted
-            away from the right edge of the nav block.
-         */
-        padding-left: 0.5em;
     }
 
     /*
         -----------------------------------------------------------------------
-        Series of rules that control positioning of footer elements
+        Rules that control appearance of navigation elements
+        -----------------------------------------------------------------------
+     */
+    #navigation-website-root, #navigation-main-pages {
+        list-style-type: none;
+    }
+    /* Remove vertical stacking of some block elements */
+    #navigation-website-root, #navigation-website-root li {
+        display: inline;
+    }
+    /* Reset padding and margin for a number of nav elements */
+    nav, #navigation-website-root, #navigation-website-root li {
+        padding: 0;
+        margin: 0;
+    }
+
+    /*
+        -----------------------------------------------------------------------
+        Rules that define navigation links' appearance
+        Note: These rules must appear early in the style sheet
+        so that we can override the styles further down.
+        -----------------------------------------------------------------------
+     */
+    /* Styles for the link to the website root */
+    #navigation-website-root a {
+        text-decoration: none;
+    }
+    #navigation-website-root a:link,
+    #navigation-website-root a:visited {
+        color: black;
+    }
+    #navigation-website-root a:hover,
+    #navigation-website-root a:focus,
+    #navigation-website-root a:active {
+        color: white;
+    }
+    /* Styles for the links to the main pages */
+    #navigation-main-pages a:link,
+    #navigation-main-pages a:visited {
+        color: #0030f0;
+    }
+    #navigation-main-pages a:hover,
+    #navigation-main-pages a:focus,
+    #navigation-main-pages a:active {
+        color: white;
+    }
+
+    /*
+        -----------------------------------------------------------------------
+        Rules that define the dropdown
+        -----------------------------------------------------------------------
+     */
+    .dropdown-container:before {
+        content: "Dropdown";
+    }
+    .dropdown-container {
+        display: inline-block;
+    }
+    .dropdown-content {
+        /*
+            Position the content so that it is flush below and on the
+            right edge of the container area.
+        */
+        position: absolute;
+        top: 100%;
+        right: 0;
+        /*
+            Specifying a non-transparent background makes the dropdown
+            distinctly visible.
+         */
+        background-color: white;
+        /*
+            Show a small area of spacing on all sides of the dropdown area.
+            It's important to use padding here, not margin! If we were using
+            margin there would be no background in the margin area. Even
+            more fatally, the mouse pointer cannot hover over the empty
+            margin area, so the dropdown would close as soon as the mouse
+            pointer would enter the margin area because the "hover:" style
+            would cease to apply. It would be efffectively impossible for
+            the mouse pointer to ***ever*** reach the dropdown area.
+         */
+        padding: 0.75em 1em;
+        /*
+            It is vital that the dropdown content ***never ever*** has a
+            margin! See the comment on the padding property for an
+            explanation.
+         */
+        margin: 0;
+        /*
+            By default the content box is as small as possible, just enough
+            to accomodate the longest link text. This is visually
+            unappealing and with short link texts the user may have
+            difficulties navigating the mouse pointer into the very
+            small dropdown area. By specifying a minimum width we give
+            the dropdown area sufficient space to provide an easy-to-hit
+            mouse pointer target.
+          */
+        min-width: 8em;
+        /*
+            Give the dropdown a little bit more visual spice.
+            Note: The shadow should not change with the font size, so
+            we use the px unit.
+         */
+        box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+        /*
+            Make sure that the dropdown appears above other content
+         */
+        z-index: 1;
+        /*
+            Finally, this hides the dropdown by default. It becomes visible
+            only when the ":hover" rule applies.
+         */
+        display: none;
+    }
+    /*
+        This is the core rule that makes the dropdown visible!
+     */
+    .dropdown-container:hover .dropdown-content {
+        display: block;
+    }
+    .dropdown-content a {
+        /* Because it's a dropdown we don't want any underlines */
+        text-decoration: none;
+        /*
+            Setting this to block allows us to background-color an
+            entire block on hover (see next rule).
+         */
+        display: block;
+    }
+    .dropdown-content a:hover {
+        /* Use the same color as the nav background */
+        background-color: cornflowerblue;
+    }
+
+    /*
+        -----------------------------------------------------------------------
+        Rules that control positioning of footer elements
         -----------------------------------------------------------------------
     */
     footer {
@@ -152,35 +269,6 @@ body {
     footer, footer p {
         padding: 0;
         margin: 0;
-    }
-
-    /*
-        -----------------------------------------------------------------------
-        Series of rules that define navigation links' appearance
-        -----------------------------------------------------------------------
-     */
-    /* Styles for the link to the website root */
-    #navigation-website-root a {
-        text-decoration: none;
-    }
-    #navigation-website-root a:link,
-    #navigation-website-root a:visited {
-        color: black;
-    }
-    #navigation-website-root a:hover,
-    #navigation-website-root a:focus,
-    #navigation-website-root a:active {
-        color: white;
-    }
-    /* Styles for the links to the main pages */
-    #navigation-main-pages a:link,
-    #navigation-main-pages a:visited {
-        color: #0030f0;
-    }
-    #navigation-main-pages a:hover,
-    #navigation-main-pages a:focus,
-    #navigation-main-pages a:active {
-        color: white;
     }
 
     /*
