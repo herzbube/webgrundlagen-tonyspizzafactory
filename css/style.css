@@ -388,6 +388,79 @@ body {
     .soft-drink .cart-line .product-price-and-cart {
         float: right;
     }
+
+    /*
+        -----------------------------------------------------------------------
+        Feedback styles
+        -----------------------------------------------------------------------
+     */
+    form ul {
+        list-style-type: none;
+    }
+
+    form ul, form ul li {
+        display: inline;
+        margin: 0;
+        padding: 0;
+    }
+
+    /* Horizontally center form */
+    form {
+        /*
+            Total of question text + spacing + input control
+            TODO: Fix this.
+         */
+        width: 40em;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    /* Add spacing between individual questions */
+    form div.question, form div.buttons {
+        margin-bottom: 1em;
+    }
+
+    /*
+        Place all questions on the left side, right-aligned, with spacing
+        between question label and input controls
+     */
+    form label.question {
+        display: block;
+        float: left;
+        /* Total width including spacing: 20em */
+        width: 18.5em;
+        margin-right: 1.5em;
+        text-align: right;
+    }
+
+    form .textinput {
+        border: 2px solid black;
+        font-family: Georgia, "Times New Roman", Times, serif;
+        font-size: .875em;
+    }
+
+    form input.textinput {
+        /* Remaining available width to fill up form */
+        width: 20em;
+        height: 2em;
+    }
+
+    form textarea {
+        display: block;
+        /* Same width as text input controls */
+        width: 20em;
+        height: 10em;
+        resize: vertical;
+    }
+
+    form div.buttons {
+        padding-left: 31em;
+    }
+
+    form input[type="submit"] {
+        width: 10em;
+        height: 2em;
+    }
 }
 
 /*
