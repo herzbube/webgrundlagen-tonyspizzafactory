@@ -59,22 +59,37 @@ body {
     nav {
         position: relative;
         /*
-            1em for the actual links, and 1em each for the top/bottom
+            1.3em for the actual links, and 1.3em each for the top/bottom
             spacing around the links. If you change this value, also
-            change the value of the "top" property in the next rule.
-            Don't specify pixels in case the font changes.
+            change the value of the "top" property in those rules that
+            position the link containers within the nav element.
+            Note: Don't specify pixels in case the font size changes.
          */
         height: 3.9em;
     }
     #navigation-website-root, #navigation-main-pages-container {
         position: absolute;
+    }
+    #navigation-website-root {
         /*
             This must match the top spacing allotted by the "height"
-            property in the previous rule. The effect is that the
-            links are more or less vertically centered within the
-            nav element.
+            property in the nav rule. The effect is that the text link
+            is more or less vertically centered within the nav element.
          */
         top: 1.3em;
+    }
+    #navigation-main-pages-container {
+        /*
+            These values vertically center the container within its
+            parent nav element. This is OK because the only visible
+            content will be the dropdown button, which is an image
+            that will automatically scale up (or down) to the required
+            height.
+            Note: Scaling is not an issue. The image is an .svg
+            vector graphics file which always scales smoothly.
+         */
+        top: 25%;
+        height: 50%;
     }
     #navigation-website-root {
         left: 1em;
@@ -137,13 +152,6 @@ body {
         Rules that define the dropdown
         -----------------------------------------------------------------------
      */
-    .dropdown-container:before {
-        /*
-            Image source: http://thenounproject.com/term/menu/36901/ (Menu by John Caserta)
-            Image slightly edited by me.
-         */
-        content: url('../image/noun_36901_cc.svg');
-    }
     .dropdown-container {
         display: inline-block;
     }
@@ -491,8 +499,9 @@ body {
         to explicitly set default values.
         -----------------------------------------------------------------------
      */
-    .dropdown-container:before {
-        content: "";
+    #navigation-main-pages-container {
+        top: auto;
+        height: auto;
     }
     .dropdown-container {
         display: block;
@@ -526,6 +535,20 @@ body {
         were in a dropdown.
         -----------------------------------------------------------------------
      */
+    .dropdown-button {
+        /* We don't want a dropdown, so we don't need the button */
+        display: none;
+    }
+
+    #navigation-main-pages-container {
+        /*
+            This must match the top spacing allotted by the "height"
+            property in the nav rule. The effect is that the text links
+            are more or less vertically centered within the nav element.
+         */
+        top: 1.3em;
+    }
+
     #navigation-main-pages-container, #navigation-main-pages, #navigation-main-pages li {
         display: inline;
     }
