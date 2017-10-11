@@ -237,7 +237,11 @@ body {
         margin: 0.4em 0;
     }
     .dropdown-content a:hover {
-        /* Use the same color as the nav background */
+        /*
+            This highlights the line with the link that the mouse
+            pointer is hovering over.
+            Note: Use the same color as the nav background
+        */
         background-color: cornflowerblue;
     }
 
@@ -436,62 +440,106 @@ body {
         padding: 0;
     }
 
-    /* Horizontally center form */
     form {
         /*
-            Total of question text + spacing + input control
-            TODO: Fix this.
+            Top/bottom margins: Use a relatively large value, especially for
+            the top because we need to create a visual break between the
+            page heading and the first form question.
+            Left/right margins: Use a minimal value because within this layout
+            for small devices we can't waste width. The form must have all the
+            possible space it can get.
          */
-        width: 40em;
-        margin-left: auto;
-        margin-right: auto;
+        margin: 3em 1em;
     }
 
-    /* Add spacing between individual questions */
     form div.question, form div.buttons {
-        margin-bottom: 1em;
+        /*
+            Add spacing between individual questions, and between the final
+            button line and the form border.
+        */
+        margin-bottom: 2em;
     }
 
-    /*
-        Place all questions on the left side, right-aligned, with spacing
-        between question label and input controls
-     */
     form label.question {
+        /*
+            Introduce a line break so that questions appear above their
+            input controls.
+          */
         display: block;
-        float: left;
-        /* Total width including spacing: 20em */
-        width: 18.5em;
-        margin-right: 1.5em;
-        text-align: right;
+        /*
+            Add spacing between the question label and its input controls.
+            Use a value that is less than the spacing between individual
+            questions.
+         */
+        margin-bottom: 0.75em;
+    }
+
+    form ul.radio li {
+        /*
+            Add spacing between radio buttons
+         */
+        margin-right: 1em;
     }
 
     form .textinput {
+        /*
+            Give all text input controls the maximum available width.
+         */
+        width: 100%;
+        /*
+            According to the requirements wireframe we need to create a
+            forceful border.
+         */
         border: 2px solid black;
-        font-family: Georgia, "Times New Roman", Times, serif;
+        /*
+            Add a comfortable padding between the text entered and the
+            forceful border.
+         */
+        padding: 0.75em;
+        /*
+            Make sure that the padding is part of the width that was
+            specified above.
+         */
+        box-sizing: border-box;
+        /*
+            Make sure that all text input controls use the same font and
+            font size. Notably, textarea elements use a different font than
+            the rest of the document, and input elements use a different
+            font size.
+            Note: Use a font size smaller than 1em to visually set the text
+            entered by the user apart from the question (but not too small,
+            otherwise it will be illegible).
+         */
+        font-family: 'Ubuntu', sans-serif;
         font-size: .875em;
     }
 
-    form input.textinput {
-        /* Remaining available width to fill up form */
-        width: 20em;
-        height: 2em;
-    }
-
     form textarea {
-        display: block;
-        /* Same width as text input controls */
-        width: 20em;
+        /*
+            Make the textarea large enough for several lines of input without
+            scrolling.
+         */
         height: 10em;
+        /*
+            Disable horizontal resizing to prevent the layout from
+            getting disrupted
+         */
         resize: vertical;
     }
 
-    form div.buttons {
-        padding-left: 31em;
+    form .buttons {
+        /*
+            Sometimes alignment can easy as pie :-) Buttons are inline
+            elements, so they are affected by text-align.
+          */
+        text-align: right;
     }
 
     form input[type="submit"] {
+        /* Enlarge the submit button to make it more prominent */
         width: 10em;
-        height: 2em;
+        height: 3em;
+        font-size: .875em;
     }
 }
 
