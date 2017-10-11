@@ -271,10 +271,12 @@ body {
           */
         left: 30%;
         /*
-            Use slightly more than 4em so that characters that
-            go below the baseline on the 4th line are not cut off.
+            We want the comment to be a maximum of 4 lines to match
+            the opening hours and postal address. The value we use
+            here must therefore be 4 times the line height that we
+            specified further up.
          */
-        height: 4.5em;
+        height: 5.2em;
         overflow: hidden;
     }
     /* Reset padding and margin for a number of footer elements */
