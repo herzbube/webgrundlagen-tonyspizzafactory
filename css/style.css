@@ -111,7 +111,7 @@ body {
         display: inline;
     }
     /* Reset padding and margin for a number of nav elements */
-    nav, #navigation-website-root, #navigation-website-root li {
+    #navigation-website-root, #navigation-website-root li {
         padding: 0;
         margin: 0;
     }
@@ -294,7 +294,7 @@ body {
         overflow: hidden;
     }
     /* Reset padding and margin for a number of footer elements */
-    footer, footer p {
+    footer p {
         padding: 0;
         margin: 0;
     }
@@ -319,9 +319,25 @@ body {
 
     /*
         -----------------------------------------------------------------------
-        General content styles
+        General styles common to all pages
         -----------------------------------------------------------------------
-     */
+    */
+    section.main-content {
+        /*
+            Create a visual break between navigation/footer
+            and the page main content
+         */
+        margin-top: 1em;
+        margin-bottom: 1em;
+        /*
+            Use a minimal left/right margin because within this layout
+            for small devices we can't waste width. The page content must
+            get as much of the available space as possible.
+         */
+        margin-left: 1em;
+        margin-right: 1em;
+    }
+
     h1 {
         text-align: center;
     }
@@ -442,14 +458,10 @@ body {
 
     form {
         /*
-            Top/bottom margins: Use a relatively large value, especially for
-            the top because we need to create a visual break between the
-            page heading and the first form question.
-            Left/right margins: Use a minimal value because within this layout
-            for small devices we can't waste width. The form must have all the
-            possible space it can get.
+            Create a visual break betwen page heading and the first
+            form question
          */
-        margin: 3em 1em;
+        margin-top: 3em;
     }
 
     form div.question, form div.buttons {
