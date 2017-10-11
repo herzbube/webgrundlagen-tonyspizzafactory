@@ -376,7 +376,14 @@ body {
     div.product {
         float: left;
     }
-    footer {
+    /*
+        HACK: We need this pseudo product to signal the end of the list so that
+        we can clear floating. We could also clear on the footer, but then
+        the main-content section would not extend down to the footer and there
+        would not be any spacing between main-content and footer.
+        TODO: Find a better solution
+     */
+    div.product-eol {
         clear: left;
     }
 
