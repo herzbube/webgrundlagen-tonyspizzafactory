@@ -366,25 +366,64 @@ body {
         General product styles
         -----------------------------------------------------------------------
      */
-    .product {
+
+    /*
+        All product pages contain a sequence of products which must be arrayed
+        in a grid. We don't care about the number of columns here, all we know
+        is that we can float the product blocks and they will nicely align in
+        the desired grid.
+     */
+    div.product {
         float: left;
     }
-    .products + footer {
+    footer {
         clear: left;
     }
-    .product {
-        /* TODO: Fix this. */
-        width: 300px;
-        padding: 1em;
+
+    /*
+        This style defines how many columns we want.
+        This is the only style that we need to override for wider screens.
+    */
+    div.product {
+        /* For narrow screens we want only 1 column */
+        width: 80%;
+        margin-left: 10%;
+        margin-right: 10%;
     }
+
+    .product-image {
+        /*
+            The product image should take up the entire width of the product
+            block, regardless of the block's actual width. This causes the
+            image to resize whenever the product block resizes.
+         */
+        width: 100%;
+    }
+
+    /*
+        Style the cart line into a part that is left-aligned and a part
+        that is right-aligned.
+        Floating is an alternative to positioning that *almost* works:
+        The problem is that we don't have a universal way to say
+        "clear: both".
+     */
+    .cart-line {
+        position: relative;
+        /* Roughly 2 lines + a bit of vertical spacing */
+        height: 3em;
+    }
+    .cart-line-part1 {
+        position: absolute;
+        left: 0;
+    }
+    .cart-line-part2 {
+        position: absolute;
+        right: 0;
+    }
+
     .product-ingredients {
-        /* Display the ingredients list in a smaller font */
+        /* Display the ingredients list in a smaller-than-normal font */
         font-size: 0.75em;
-    }
-    .cart-image {
-        /* TODO: Fix this. */
-        width: 1.2em;
-        height: 1.2em;
     }
 
     /*
@@ -392,51 +431,24 @@ body {
         Pizza page styles
         -----------------------------------------------------------------------
      */
-    .pizza .cart-line p {
-        display: inline;
-        margin: 0;
-    }
-    .pizza .cart-line .product-name {
-        float: left;
-    }
-    .pizza .cart-line .product-price-and-cart {
-        float: right;
-    }
-    .pizza .product-ingredients {
-        clear: both;
-    }
+
+    /* Currently none */
 
     /*
         -----------------------------------------------------------------------
         Salad page styles
         -----------------------------------------------------------------------
      */
-    .salad .cart-line select, .salad .cart-line p {
-        display: inline;
-        margin: 0;
-    }
-    .salad .cart-line .salad-dressing {
-        float: left;
-    }
-    .salad .cart-line .product-price-and-cart {
-        float: right;
-    }
+
+    /* Currently none */
 
     /*
         -----------------------------------------------------------------------
         Soft drinks page styles
         -----------------------------------------------------------------------
      */
-    .soft-drink .cart-line select, .soft-drink .cart-line p {
-        display: inline;
-        margin: 0;
-    }
-    .soft-drink .cart-line .drink-size {
-        float: left;
-    }
-    .soft-drink .cart-line .product-price-and-cart {
-        float: right;
-    }
+
+    /* Currently none */
 
     /*
         -----------------------------------------------------------------------
@@ -705,6 +717,18 @@ body {
             "inline-block" above.
         */
         text-align: center;
+    }
+
+    /*
+        -----------------------------------------------------------------------
+        General product styles
+        -----------------------------------------------------------------------
+    */
+    div.product {
+        /* For wide screens we want 4 columns */
+        width: 20%;
+        margin-left: 2%;
+        margin-right: 2%;
     }
 
     /*
