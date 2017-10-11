@@ -347,21 +347,18 @@ body {
         Front page styles
         -----------------------------------------------------------------------
      */
-    #ambience-image {
-        /* This works because the image is an inline element */
-        text-align: center;
+    #front #ambience-image img {
+        width: 100%;
     }
 
-    .front .product-category {
-        float: left;
+    #front .product-category img {
+        width: 50%;
+        margin-left: 25%;
+        margin-right: 25%;
     }
-    .front + footer {
-        clear: left;
-    }
-    .front .product-category {
-        /* TODO: Fix this. */
-        width: 300px;
-        padding: 1em;
+
+    #front p.product-category {
+        text-align: center;
     }
 
     /*
@@ -563,7 +560,7 @@ body {
 {
     /*
         -----------------------------------------------------------------------
-        Rules that undo the dropdown configuration
+        Rules that reset/undo the dropdown configuration
         These rules must appear early so that we can override
         and re-style further down.
         Unfortunately we can't use the "unset" keyword because browser support
@@ -643,6 +640,71 @@ body {
      */
     #customer-comment, #postal-address {
         display: block;
+    }
+
+    /*
+        -----------------------------------------------------------------------
+        Front page styles
+        -----------------------------------------------------------------------
+     */
+    #front #ambience-image img {
+        width: 60%;
+        margin-left: 20%;
+        margin-right: 20%;
+    }
+
+    /* Reset styles from the initial styling */
+    #front .product-category img {
+        width: auto;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    #front p.product-category {
+        /*
+            Prevent the paragraphs from creating line breaks (inline) but let
+            them stay blocks so that we can assign a width.
+         */
+        display: inline-block;
+        /*
+            We have three categories, so a theoretical value to use
+            here would be 33%. The actual value we use is well below
+            that, to create a generous left/right margin, and also to
+            account for a little spacing between the categories.
+         */
+        width: 25%;
+        /*
+            Create spacing between categories.
+            The tricky bit is that we must take into account that we also
+            want to horizontally center all three categories. Because of
+            this we must make sure that 1) the left margin of the left-most
+            category, and 2) the right margin of the right-most category
+            have the same value. To achieve this we use both left and right
+            margin and assign each half of the value that we actually want
+            as spacing between the categories.
+         */
+        margin-left: 2.5%;
+        margin-right: 2.5%;
+    }
+
+    #front .product-category img {
+        /*
+            Another bit of trickery: Because the "p" elements have been styled
+            as "inline-block" (see above) they are still blocks and we can tell
+            the "img" elements to use 100% of their width. This causes them
+            to nicely resize together with their parent "p".
+         */
+        width: 100%;
+    }
+
+    #front #product-categories {
+        /*
+            Finally, horizontally center all three of the categories.
+            This works because the "p" elements behave as inline elements
+            within the document flow because we have styled them as
+            "inline-block" above.
+        */
+        text-align: center;
     }
 
     /*
