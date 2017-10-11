@@ -529,7 +529,7 @@ body {
 
     form .buttons {
         /*
-            Sometimes alignment can easy as pie :-) Buttons are inline
+            Sometimes alignment can be easy as pie :-) Buttons are inline
             elements, so they are affected by text-align.
           */
         text-align: right;
@@ -631,5 +631,49 @@ body {
      */
     #customer-comment, #postal-address {
         display: block;
+    }
+
+    /*
+        -----------------------------------------------------------------------
+        Feedback styles
+        -----------------------------------------------------------------------
+     */
+    form {
+        /*
+            Keep top/bottom margins from the initial styling, but use
+            proportional left/right margins to make more generous use
+            of the available space.
+         */
+        margin-left: 10%;
+        margin-right: 10%;
+    }
+
+    /*
+        Place all questions on the left side, right-aligned, with spacing
+        between question label and input controls
+    */
+    form label.question {
+        /*
+            Make the label into a block so that we can float it.
+            Note: The label is already a block from the initial styling
+            further up, so strictly speaking this property isn't necessary.
+            But let's keep it in case the initial styling changes.
+        */
+        display: block;
+        float: left;
+        text-align: right;
+    }
+
+    /*
+        Distribute the available form width
+        Note: The radio buttons and their labels are all inline elements,
+        so they will line up and we don't have to specify a width for them
+    */
+    form label.question {
+        width: 35%;
+        margin-right: 5%;
+    }
+    form .textinput {
+        width: 60%;
     }
 }
