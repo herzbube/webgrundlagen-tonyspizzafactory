@@ -357,8 +357,71 @@ body {
         margin-right: 25%;
     }
 
-    #front p.product-category {
-        text-align: center;
+    /*
+        Styles for positioning the product category labels so that each overlaps
+        its respective product category image. The label must also be
+        horizontally and vertically centered.
+     */
+    #front div.product-category {
+        position: relative;
+    }
+    #front p.product-category-label {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        /*
+            TODO: Find a different method for vertically centering than flex.
+            According to W3Schools the flexbox display mode is supported only
+            from IE 11.0 onwards, which is too new for my taste. Unfortunately,
+            all other solutions that I tried for vertically centering the text
+            failed, so for the moment I am resorting to the flexbox method I
+            found in this w3.org article:
+                https://www.w3.org/Style/Examples/007/center.en.html
+
+            Other stuff that I tried:
+            1) The "Absolute Centering" method, called like this by the
+               author of this Smashing Magazine article:
+               https://www.smashingmagazine.com/2013/08/absolute-horizontal-vertical-centering-css/
+
+                position: absolute;
+                margin: auto;
+                top: 0;
+                left: 0;
+                bottom: 0;
+                right: 0;
+                width: 50%;
+                height: 50%;
+
+            2) The table method:
+
+                top: 0;
+                left: 0;
+                width: 50%;
+                height: 100%;
+                margin-left: 25%;
+                margin-right: 25%;
+                margin-top: 0;
+                margin-bottom: 0;
+                display: table-cell;
+                vertical-align: middle;
+
+            3) And other things that I cobbled together myself and that are not
+               really worth mentioning.
+         */
+        display: flex;
+        /* Vertical centering */
+        align-items: center;
+        /* Horizontal centering */
+        justify-content: center;
+        margin: 0;
+    }
+
+    /* Other non-positioning styles */
+    #front p.product-category-label {
+        color: white;
+        font-size: 200%;
     }
 
     /*
@@ -679,7 +742,7 @@ body {
         margin-right: auto;
     }
 
-    #front p.product-category {
+    #front div.product-category {
         /*
             Prevent the paragraphs from creating line breaks (inline) but let
             them stay blocks so that we can assign a width.
