@@ -57,12 +57,24 @@ body {
         -----------------------------------------------------------------------
      */
     nav {
-        position: relative;
+        /*
+            Keep the navigation bar visible at all times, i.e. don't let it
+            scroll out of view.
+         */
+        position: fixed;
+        top: 0;
+        left: 0;
+        /*
+            We *must* specify a width because of fixed positioning
+         */
+        width: 100%;
         /*
             1.3em for the actual links, and 1.3em each for the top/bottom
             spacing around the links. If you change this value, also
-            change the value of the "top" property in those rules that
-            position the link containers within the nav element.
+            change the following values:
+            - The value of the "top" property in those rules that
+              position the link containers within the nav element.
+            - The top margin of section.main-content
             Note: Don't specify pixels in case the font size changes.
          */
         height: 3.9em;
@@ -326,8 +338,14 @@ body {
         /*
             Create a visual break between navigation/footer
             and the page main content
+            Note: The top margin value is the sum of the following amounts:
+            - 1em to create the intended visual break
+            - 3.9em to move the main content out from underneath the navigation
+              bar, which is in a fixed, non-scrolling position at the top of
+              the browser window. The amount of margin must be equal to the
+              height of the navigation bar.
          */
-        margin-top: 1em;
+        margin-top: 4.9em;
         margin-bottom: 1em;
         /*
             Use a minimal left/right margin because within this layout
