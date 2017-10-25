@@ -4,6 +4,9 @@ This project contains the HTML, CSS and JavaScript code for the fictional websit
 
 The project's purpose is to learn the basics about HTML, CSS and JavaScript so that a website with pure client-side programming can be set up. The project scope and goals are defined by the FFHS course "Web Grundlagen".
 
+Visit the following URL to see the site in action: https://herzbube.github.io/webgrundlagen-tonyspizzafactory/.
+
+
 # Is this useful for me?
 
 If you != me, then the answer is: Probably not :-) This is purely a personal learning project, which I will keep after the course has finished out of nostalgia.
