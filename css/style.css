@@ -504,6 +504,11 @@ body {
         Floating is an alternative to positioning that *almost* works:
         The problem is that we don't have a universal way to say
         "clear: both".
+
+        Specifying a width for the two parts is important to prevent
+        overlapping. The two widths don't add up to 100% by design,
+        there is a small gap of 5% to create a bit of spacing between
+        part 1 and 2.
      */
     .cart-line {
         position: relative;
@@ -513,10 +518,18 @@ body {
     .cart-line-part1 {
         position: absolute;
         left: 0;
+        width: 55%;
     }
     .cart-line-part2 {
         position: absolute;
         right: 0;
+        width: 40%;
+        /*
+            The width specified above makes part 2 of the cart line wider than
+            is required most of the time. Because of this we must tell the
+            inline elements to align to the right edge.
+         */
+        text-align: right;
     }
 
     .product-price {
