@@ -334,6 +334,16 @@ body {
         General styles common to all pages
         -----------------------------------------------------------------------
     */
+    body {
+        /*
+            Let the content snuggle up to the browser window edges. This
+            is especially important for navigation and footer - because these
+            elements have a colored background, any white margin becomes
+            immediately visible.
+         */
+        margin: 0;
+    }
+
     section.main-content {
         /*
             Create a visual break between navigation/footer
