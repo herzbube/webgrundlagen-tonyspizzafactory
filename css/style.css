@@ -512,8 +512,8 @@ body {
      */
     .cart-line {
         position: relative;
-        /* Roughly 2 lines + a bit of vertical spacing */
-        height: 3em;
+        /* Reserve 2 lines to provide enough space for a longish text */
+        height: 2.6em;
     }
     .cart-line-part1 {
         position: absolute;
@@ -545,6 +545,29 @@ body {
         /* Display the ingredients list in a smaller-than-normal font */
         font-size: 0.75em;
     }
+
+    /*
+        Define vertical spacing
+        - Between product blocks
+        - Between the lines inside a product block
+
+        Note: Because product blocks are built differently for different
+        product types, here we merely assume that a product block consists
+        of 1-n lines.
+     */
+    div.product {
+        margin-top: 1em;
+        margin-bottom: 1em;
+    }
+    div.product p {
+        /* Reset all margins */
+        margin: 0;
+    }
+    div.product .product-line {
+        margin-top: 0.5em;
+        margin-bottom: 0.5em;
+    }
+
 
     /*
         -----------------------------------------------------------------------
