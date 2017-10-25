@@ -519,6 +519,15 @@ body {
         right: 0;
     }
 
+    .product-price {
+        /*
+            This works only for inline elements. As it happens, the
+            product-price class is applied to an inline element :-)
+            so we don't need to specify "display: inline" here.
+         */
+        vertical-align: top;
+    }
+
     .product-ingredients {
         /* Display the ingredients list in a smaller-than-normal font */
         font-size: 0.75em;
