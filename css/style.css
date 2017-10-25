@@ -265,7 +265,7 @@ body {
     footer {
         position: relative;
         /*
-            4em for the actual lines, 1em each for the top/bottom
+            4 x 1.3 = 5.2em for the actual lines, 1.3em each for the top/bottom
             spacing around the links. If you change this value, also
             change the value of the "top" property in the next rule.
             Don't specify pixels in case the font changes.
