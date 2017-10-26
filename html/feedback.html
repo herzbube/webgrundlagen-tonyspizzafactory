@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="stylesheet" href="../css/style.css" />
+    <script src="../script/feedback-validation.js" defer="defer"></script>
     <title>Tony's Pizza Factory</title>
 </head>
 <body>
@@ -49,7 +50,7 @@
         </div>
 
         <div class="question">
-            <label class="question">What do you think about our prizes?</label>
+            <label class="question">What do you think about our prices?</label>
             <ul class="radio">
                 <li>
                     <input id="rating-prices-fair" type="radio" name="rating-prices" value="fair" />
@@ -69,14 +70,17 @@
         <div class="question">
             <label for="customer-name" class="question">Your name?</label>
             <input id="customer-name" class="textinput" type="text" name="customer-name" placeholder="Enter your name here" />
+            <span id="customer-name-error-message" class="error-message"></span>
         </div>
         <div class="question">
             <label for="customer-email" class="question">Your e-mail address?</label>
             <input id="customer-email" class="textinput" type="email" name="customer-email" placeholder="Enter your e-mail address here" />
+            <span id="customer-email-error-message" class="error-message"></span>
         </div>
         <div class="question">
             <label for="suggestions" class="question">What can we do better?</label>
-            <textarea id="suggestions" class="textinput" name="suggestions" placeholder="Enter your suggestions here"></textarea>
+            <textarea id="suggestions" class="textinput" name="suggestions" placeholder="Enter your suggestions here. Please type at least 50 characters."></textarea>
+            <span id="suggestions-error-message" class="error-message"></span>
         </div>
 
         <div class="buttons">

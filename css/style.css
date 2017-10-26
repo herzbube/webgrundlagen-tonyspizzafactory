@@ -705,6 +705,24 @@ body {
         height: 3em;
         font-size: .875em;
     }
+
+    form span.error-message {
+        color: red;
+        /* Make this into block so that we can apply a margin */
+        display: block;
+        /*
+            Add spacing between the input control and the error message.
+            Use a value that is less than the spacing between individual
+            questions, ideally the same value as for spacing between the
+            question label and the input control.
+         */
+        margin-top: 0.75em;
+    }
+
+    /* Hide all error messages by default. Use "display: block" to show them */
+    form span.error-message {
+        display: none;
+    }
 }
 
 /*
@@ -916,5 +934,18 @@ body {
     }
     form .textinput {
         width: 60%;
+    }
+    form span.error-message {
+        /* Same width as the text input controls */
+        width: 60%;
+        /* Make this into block so that we can apply a margin */
+        display: block;
+        /* Align with the text input controls */
+        margin-left: 40%;
+    }
+
+    /* Hide all error messages by default. Use "display: block" to show them */
+    form span.error-message {
+        display: none;
     }
 }
