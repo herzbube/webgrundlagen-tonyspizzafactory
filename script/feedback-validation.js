@@ -158,15 +158,6 @@ function validatePizzaRating()
 {
     isPizzaRatingValid = checkIfPizzaRatingIsValid();
 
-    if (isPizzaRatingValid)
-    {
-        // TODO: Remove markup
-    }
-    else
-    {
-        // TODO: Add markup
-    }
-
     updateForm();
 }
 
@@ -180,15 +171,6 @@ function checkIfPizzaRatingIsValid()
 function validatePriceRating()
 {
     isPriceRatingValid = checkIfPriceRatingIsValid();
-
-    if (isPriceRatingValid)
-    {
-        // TODO: Remove markup
-    }
-    else
-    {
-        // TODO: Add markup
-    }
 
     updateForm();
 }
