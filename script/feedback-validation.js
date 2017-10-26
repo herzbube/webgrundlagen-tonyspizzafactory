@@ -117,6 +117,40 @@ function updateSubmitButton(isFormValid)
         submitButton.disabled = true;
 }
 
+function updateErrorMessage(isInputValueValid, inputTextFieldElement, errorMessageElementID, errorMessage)
+{
+    if (isInputValueValid)
+    {
+        inputTextFieldElement.style.borderColor = "black";
+        hideErrorMessage(errorMessageElementID);
+    }
+    else
+    {
+        inputTextFieldElement.style.borderColor = "red";
+        showErrorMessage(errorMessage, errorMessageElementID);
+    }
+}
+
+function showErrorMessage(errorMessage, errorMessageElementID)
+{
+    var errorMessageElement = document.getElementById(errorMessageElementID);
+    if (errorMessageElement === null)
+        return;
+
+    errorMessageElement.innerText = errorMessage;
+    errorMessageElement.style.display = "block";
+}
+
+function hideErrorMessage(errorMessageElementID)
+{
+    var errorMessageElement = document.getElementById(errorMessageElementID);
+    if (errorMessageElement === null)
+        return;
+
+    errorMessageElement.innerText = "";
+    errorMessageElement.style.display = "none";
+}
+
 // --------------------------------------------------------------------------------
 // validate... and checkIf... functions
 // --------------------------------------------------------------------------------
@@ -170,24 +204,11 @@ function checkIfPriceRatingIsValid()
 function validateCustomerName()
 {
     isCustomerNameValid = checkIfCustomerNameIsValid();
-
     var customerNameTextfield = getCustomerNameTextfield();
-    if (null === customerNameTextfield)
-        return;
-
     var errorMessageElementID = "customer-name-error-message";
-    if (isCustomerNameValid)
-    {
-        customerNameTextfield.style.borderColor = "black";
-        hideErrorMessage(errorMessageElementID);
-    }
-    else
-    {
-        customerNameTextfield.style.borderColor = "red";
-        var errorMessage = "Please enter your name";
-        showErrorMessage(errorMessage, errorMessageElementID);
-    }
+    var errorMessage = "Please enter your name";
 
+    updateErrorMessage(isCustomerNameValid, customerNameTextfield, errorMessageElementID, errorMessage);
     updateForm();
 }
 
@@ -207,24 +228,11 @@ function checkIfCustomerNameIsValid()
 function validateCustomerEmail()
 {
     isCustomerEmailValid = checkIfCustomerEmailIsValid();
-
     var customerEmailTextfield = getCustomerEmailTextfield();
-    if (null === customerEmailTextfield)
-        return;
-
     var errorMessageElementID = "customer-email-error-message";
-    if (isCustomerEmailValid)
-    {
-        customerEmailTextfield.style.borderColor = "black";
-        hideErrorMessage(errorMessageElementID);
-    }
-    else
-    {
-        customerEmailTextfield.style.borderColor = "red";
-        var errorMessage = "'" + customerEmailTextfield.value + "' is not a valid e-mail address";
-        showErrorMessage(errorMessage, errorMessageElementID);
-    }
+    var errorMessage = "'" + customerEmailTextfield.value + "' is not a valid e-mail address";
 
+    updateErrorMessage(isCustomerEmailValid, customerEmailTextfield, errorMessageElementID, errorMessage);
     updateForm();
 }
 
@@ -262,24 +270,11 @@ function checkIfCustomerEmailIsValid()
 function validateSuggestions()
 {
     areSuggestionsValid = checkIfSuggestionsAreValid();
-
     var suggestionsTextfield = getSuggestionsTextfield();
-    if (null === suggestionsTextfield)
-        return;
-
     var errorMessageElementID = "suggestions-error-message";
-    if (areSuggestionsValid)
-    {
-        suggestionsTextfield.style.borderColor = "black";
-        hideErrorMessage(errorMessageElementID);
-    }
-    else
-    {
-        suggestionsTextfield.style.borderColor = "red";
-        var errorMessage = "Please enter at least 50 characters";
-        showErrorMessage(errorMessage, errorMessageElementID);
-    }
+    var errorMessage = "Please enter at least 50 characters";
 
+    updateErrorMessage(areSuggestionsValid, suggestionsTextfield, errorMessageElementID, errorMessage);
     updateForm();
 }
 
@@ -340,24 +335,4 @@ function isAnyRadioButtonChecked(radioButtonsArray)
     }
 
     return false;
-}
-
-function showErrorMessage(errorMessage, errorMessageElementID)
-{
-    var errorMessageElement = document.getElementById(errorMessageElementID);
-    if (errorMessageElement === null)
-        return;
-
-    errorMessageElement.innerText = errorMessage;
-    errorMessageElement.style.display = "block";
-}
-
-function hideErrorMessage(errorMessageElementID)
-{
-    var errorMessageElement = document.getElementById(errorMessageElementID);
-    if (errorMessageElement === null)
-        return;
-
-    errorMessageElement.innerText = "";
-    errorMessageElement.style.display = "none";
 }
