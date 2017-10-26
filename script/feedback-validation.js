@@ -123,10 +123,7 @@ function updateSubmitButton(isFormValid)
 
 function validatePizzaRating()
 {
-    var wasPizzaRatingValid = isPizzaRatingValid;
     isPizzaRatingValid = checkIfPizzaRatingIsValid();
-    if (isPizzaRatingValid === wasPizzaRatingValid)
-        return;
 
     if (isPizzaRatingValid)
     {
@@ -149,10 +146,7 @@ function checkIfPizzaRatingIsValid()
 
 function validatePriceRating()
 {
-    var wasPriceRatingValid = isPriceRatingValid;
     isPriceRatingValid = checkIfPriceRatingIsValid();
-    if (isPriceRatingValid === wasPriceRatingValid)
-        return;
 
     if (isPriceRatingValid)
     {
@@ -175,10 +169,7 @@ function checkIfPriceRatingIsValid()
 
 function validateCustomerName()
 {
-    var wasCustomerNameValid = isCustomerNameValid;
     isCustomerNameValid = checkIfCustomerNameIsValid();
-    if (isCustomerNameValid === wasCustomerNameValid)
-        return;
 
     var customerNameTextfield = getCustomerNameTextfield();
     if (null === customerNameTextfield)
@@ -215,10 +206,7 @@ function checkIfCustomerNameIsValid()
 
 function validateCustomerEmail()
 {
-    var wasCustomerEmailValid = isCustomerEmailValid;
     isCustomerEmailValid = checkIfCustomerEmailIsValid();
-    if (isCustomerEmailValid === wasCustomerEmailValid)
-        return;
 
     var customerEmailTextfield = getCustomerEmailTextfield();
     if (null === customerEmailTextfield)
@@ -273,10 +261,7 @@ function checkIfCustomerEmailIsValid()
 
 function validateSuggestions()
 {
-    var wereSuggestionsValid = areSuggestionsValid;
     areSuggestionsValid = checkIfSuggestionsAreValid();
-    if (areSuggestionsValid === wereSuggestionsValid)
-        return;
 
     var suggestionsTextfield = getSuggestionsTextfield();
     if (null === suggestionsTextfield)
