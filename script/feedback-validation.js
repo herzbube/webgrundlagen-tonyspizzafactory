@@ -106,10 +106,9 @@ function updateForm()
 
 function updateSubmitButton(isFormValid)
 {
-    var submitButtons = document.querySelectorAll("input[type=\"submit\"]");
-    if (submitButtons.length < 1)
+    var submitButton = getSubmitButton();
+    if (null === submitButton)
         return;
-    var submitButton = submitButtons[0];
 
     if (isFormValid)
         submitButton.disabled = false;
@@ -317,6 +316,15 @@ function getCustomerEmailTextfield()
 function getSuggestionsTextfield()
 {
     return document.getElementById("suggestions");
+}
+
+function getSubmitButton()
+{
+    var submitButtons = document.querySelectorAll("input[type=\"submit\"]");
+    if (submitButtons.length >= 1)
+        return submitButtons[0];
+    else
+        return null;
 }
 
 // --------------------------------------------------------------------------------
