@@ -133,7 +133,7 @@ function updateErrorMessage(isInputValueValid, inputTextFieldElement, errorMessa
 function showErrorMessage(errorMessage, errorMessageElementID)
 {
     var errorMessageElement = document.getElementById(errorMessageElementID);
-    if (errorMessageElement === null)
+    if (null === errorMessageElement)
         return;
 
     errorMessageElement.innerText = errorMessage;
@@ -143,7 +143,7 @@ function showErrorMessage(errorMessage, errorMessageElementID)
 function hideErrorMessage(errorMessageElementID)
 {
     var errorMessageElement = document.getElementById(errorMessageElementID);
-    if (errorMessageElement === null)
+    if (null === errorMessageElement)
         return;
 
     errorMessageElement.innerText = "";
@@ -242,7 +242,7 @@ function checkIfCustomerEmailIsValid()
         return false;
 
     var customerEmail = customerEmailTextfield.value.trim();
-    if (customerEmail.length === 0)
+    if (0 === customerEmail.length)
         return false;
 
     // Rules enforced by this regex:
