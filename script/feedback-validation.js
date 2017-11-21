@@ -1,9 +1,11 @@
 // --------------------------------------------------------------------------------
 // Working principles of this form validation script:
-// - Perform initial validation of all input fields without error markup
-//   if a field is not valid. We don't want to put off the user when he/she
-//   opens the form for the first time. Initial validation only serves the
-//   purpose of disabling/enabling the submit button
+// - Perform no initial validation - we don't want to put off the user when
+//   he/she opens the form for the first time.
+// - The "Submit" button is initially enabled. If the user clicks the button
+//   or submits the form in any other way, a full validation cycle is
+//   executed. All input controls that have invalid values are immediately
+//   marked up.
 // - Perform validation for radio buttons when the "change" event occurs
 // - Perform validation for text input controls when the "blur" event occurs
 //   (this is the traditional event name when a control loses focus)
@@ -30,8 +32,6 @@ var isCustomerEmailValid = false;
 var areSuggestionsValid = false;
 
 addEventListeners();
-checkAllInputFields();
-updateForm();
 
 // --------------------------------------------------------------------------------
 // Initializing functions
@@ -76,16 +76,30 @@ function addEventListeners()
     {
         suggestionsTextfield.addEventListener("blur", validateSuggestions);
     }
+
+    var feedbackForm = getFeedbackForm();
+    if (feedbackForm !== null)
+    {
+        // Directly listening to the form's submit event makes us independent
+        // from how the form was submitted. The typical way is that the user
+        // clicks the submit button, but there may be other methods as well.
+        feedbackForm.addEventListener("submit", onFeedbackFormSubmitted);
+    }
 }
 
-function checkAllInputFields()
+// --------------------------------------------------------------------------------
+// Feedback form functions
+// --------------------------------------------------------------------------------
+
+function onFeedbackFormSubmitted(event)
 {
+    validateAllInputFields();
+    updateForm();
+
     // Variable names must be different from function names :-(
-    isPizzaRatingValid = checkIfPizzaRatingIsValid();
-    isPriceRatingValid = checkIfPriceRatingIsValid();
-    isCustomerNameValid = checkIfCustomerNameIsValid();
-    isCustomerEmailValid = checkIfCustomerEmailIsValid();
-    areSuggestionsValid = checkIfSuggestionsAreValid();
+    var isFormValidResult = isFormValid();
+    if (! isFormValidResult)
+        event.preventDefault();
 }
 
 // --------------------------------------------------------------------------------
@@ -94,14 +108,9 @@ function checkAllInputFields()
 
 function updateForm()
 {
-    var isFormValid = (
-        isPizzaRatingValid &&
-        isPriceRatingValid &&
-        isCustomerNameValid &&
-        isCustomerEmailValid &&
-        areSuggestionsValid);
-
-    updateSubmitButton(isFormValid);
+    // Variable names must be different from function names :-(
+    var isFormValidResult = isFormValid();
+    updateSubmitButton(isFormValidResult);
 }
 
 function updateSubmitButton(isFormValid)
@@ -116,18 +125,22 @@ function updateSubmitButton(isFormValid)
         submitButton.disabled = true;
 }
 
-function updateErrorMessage(isInputValueValid, inputTextFieldElement, errorMessageElementID, errorMessage)
+function updateErrorMessageTextField(isInputValueValid, inputTextFieldElement, errorMessageElementID, errorMessage)
 {
     if (isInputValueValid)
-    {
         inputTextFieldElement.style.borderColor = "black";
-        hideErrorMessage(errorMessageElementID);
-    }
     else
-    {
         inputTextFieldElement.style.borderColor = "red";
+
+    updateErrorMessage(isInputValueValid, errorMessageElementID, errorMessage);
+}
+
+function updateErrorMessage(isInputValueValid, errorMessageElementID, errorMessage)
+{
+    if (isInputValueValid)
+        hideErrorMessage(errorMessageElementID);
+    else
         showErrorMessage(errorMessage, errorMessageElementID);
-    }
 }
 
 function showErrorMessage(errorMessage, errorMessageElementID)
@@ -154,10 +167,34 @@ function hideErrorMessage(errorMessageElementID)
 // validate... and checkIf... functions
 // --------------------------------------------------------------------------------
 
+// Both checks and form updates
+function validateAllInputFields()
+{
+    validatePizzaRating();
+    validatePriceRating();
+    validateCustomerName();
+    validateCustomerEmail();
+    validateSuggestions();
+}
+
+// Only checks, no form updates
+function checkAllInputFields()
+{
+    // Variable names must be different from function names :-(
+    isPizzaRatingValid = checkIfPizzaRatingIsValid();
+    isPriceRatingValid = checkIfPriceRatingIsValid();
+    isCustomerNameValid = checkIfCustomerNameIsValid();
+    isCustomerEmailValid = checkIfCustomerEmailIsValid();
+    areSuggestionsValid = checkIfSuggestionsAreValid();
+}
+
 function validatePizzaRating()
 {
     isPizzaRatingValid = checkIfPizzaRatingIsValid();
+    var errorMessageElementID = "rating-pizzas-error-message";
+    var errorMessage = "Please select a rating for our pizzas";
 
+    updateErrorMessage(isPizzaRatingValid, errorMessageElementID, errorMessage);
     updateForm();
 }
 
@@ -171,7 +208,10 @@ function checkIfPizzaRatingIsValid()
 function validatePriceRating()
 {
     isPriceRatingValid = checkIfPriceRatingIsValid();
+    var errorMessageElementID = "rating-prices-error-message";
+    var errorMessage = "Please select a rating for our prices";
 
+    updateErrorMessage(isPriceRatingValid, errorMessageElementID, errorMessage);
     updateForm();
 }
 
@@ -189,7 +229,7 @@ function validateCustomerName()
     var errorMessageElementID = "customer-name-error-message";
     var errorMessage = "Please enter your name";
 
-    updateErrorMessage(isCustomerNameValid, customerNameTextfield, errorMessageElementID, errorMessage);
+    updateErrorMessageTextField(isCustomerNameValid, customerNameTextfield, errorMessageElementID, errorMessage);
     updateForm();
 }
 
@@ -213,7 +253,7 @@ function validateCustomerEmail()
     var errorMessageElementID = "customer-email-error-message";
     var errorMessage = "'" + customerEmailTextfield.value + "' is not a valid e-mail address";
 
-    updateErrorMessage(isCustomerEmailValid, customerEmailTextfield, errorMessageElementID, errorMessage);
+    updateErrorMessageTextField(isCustomerEmailValid, customerEmailTextfield, errorMessageElementID, errorMessage);
     updateForm();
 }
 
@@ -255,7 +295,7 @@ function validateSuggestions()
     var errorMessageElementID = "suggestions-error-message";
     var errorMessage = "Please enter at least 50 characters";
 
-    updateErrorMessage(areSuggestionsValid, suggestionsTextfield, errorMessageElementID, errorMessage);
+    updateErrorMessageTextField(areSuggestionsValid, suggestionsTextfield, errorMessageElementID, errorMessage);
     updateForm();
 }
 
@@ -309,6 +349,14 @@ function getSubmitButton()
         return null;
 }
 
+function getFeedbackForm()
+{
+    if (document.forms.length > 0)
+        return document.forms[0];
+    else
+        return null;
+}
+
 // --------------------------------------------------------------------------------
 // Helper functions
 // --------------------------------------------------------------------------------
@@ -325,4 +373,20 @@ function isAnyRadioButtonChecked(radioButtonsArray)
     }
 
     return false;
+}
+
+function isFormValid()
+{
+    if (! isPizzaRatingValid)
+        return false;
+    else if (! isPriceRatingValid)
+        return false;
+    else if (! isCustomerNameValid)
+        return false;
+    else if (! isCustomerEmailValid)
+        return false;
+    else if (! areSuggestionsValid)
+        return false;
+    else
+        return true;
 }
