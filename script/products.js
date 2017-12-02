@@ -1,0 +1,490 @@
+// --------------------------------------------------------------------------------
+// Working principles of this script:
+// - Determine type of data required by examining the HTML markup of the
+//   document
+// - Asynchronously fetch data
+// - Once data has been fetched, iterate over each data item and generate
+//   a corresponding block of HTML markup for the item
+//
+// Coding style notes:
+// - There is error handling to handle network problems when fetching data.
+//   This is required, obviously, because we cannot trust the network
+//   infrastructure to work correcly all the time because that infrastructure
+//   is not under our control.
+// - However, there is no error handling whatsoever in regard to things that
+//   ***ARE*** under our control. Notably ...
+//   - We trust that the API delivers the right kind of data with the right
+//     structure etc., because the API server is under our control.
+//   - We trust that the structure of the document is correct, because the
+//     document is served from a web server under our control.
+//   - We trust that our own code in this script works correctly :-)
+//   This is offensive programming by design! If someone in our organization
+//   messes things up then we want to notice the problem ASAP, not cover it up!
+// - ***ANY*** errors that occur due to our offensive programming will be
+//   caught by the Promise and forwarded to the Promise's failure handler.
+// --------------------------------------------------------------------------------
+
+// --------------------------------------------------------------------------------
+// Global constants
+// --------------------------------------------------------------------------------
+
+var RESOURCE_TYPE_UNDEFINED = 0;
+var RESOURCE_TYPE_PIZZA = 1;
+var RESOURCE_TYPE_SALAD = 2;
+var RESOURCE_TYPE_SOFTDRINK = 3;
+
+var API_BASE_URL = "https://tonyspizzafactory.herokuapp.com/api/";
+var API_URL_SUFFIX_PIZZA = "pizzas";
+var API_URL_SUFFIX_SALAD = "salads";
+var API_URL_SUFFIX_SOFTDRINK = "softdrinks";
+var API_AUTHORIZATION_TOKEN = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.MQ.bYceSpllpyYQixgNzDt7dpCkEojdv3NKD-85XLXfdI4";
+
+var ID_PIZZAS = "pizzas";
+var ID_SALADS = "salads";
+var ID_SOFTDRINKS = "soft-drinks";
+var ID_PREFIX_PIZZA = "pizza-";
+var ID_PREFIX_SALAD = "salad-";
+var ID_PREFIX_SOFTDRINK = "soft-drink-";
+
+// Class of the element that is the parent of all product blocks
+var CLASS_MAIN_CONTENT = "main-content";
+// Class of the div that terminates the product list
+var CLASS_PRODUCT_EOL = "product-eol";
+// The entire product
+var CLASS_PRODUCT = "product";
+// Specific product/resource types
+var CLASS_PRODUCT_PIZZA = "pizza";
+var CLASS_PRODUCT_SALAD = "salad";
+var CLASS_PRODUCT_SOFTDRINK = "soft-drink";
+// A single line in a product block
+var CLASS_PRODUCT_LINE = "product-line";
+// Specific line types
+var CLASS_PRODUCT_IMAGE = "product-image";
+var CLASS_PRODUCT_NAME = "product-name";
+var CLASS_PRODUCT_PRICE = "product-price";
+var CLASS_PRODUCT_INGREDIENTS = "product-ingredients";
+// Helper class
+var CLASS_PRODUCT_PRICEANDCART = "product-price-and-cart";
+// Shopping cart classes
+var CLASS_CART_LINE = "cart-line";
+var CLASS_CART_LINE_PART1 = "cart-line-part1";
+var CLASS_CART_LINE_PART2 = "cart-line-part2";
+var CLASS_CART_IMAGE = "cart-image";
+
+var CART_IMAGE_TITLEANDALT = "Place into shopping cart";
+// cart by Alfa Design from the Noun Project
+var CART_IMAGE_URL = "../image/noun_927435_cc.svg";
+
+// --------------------------------------------------------------------------------
+// Launch the whole process
+// --------------------------------------------------------------------------------
+
+var completionHandler = generateHtmlMarkupFromJsonData;
+var failureHandler = generateHtmlMarkupWithErrorMessage;
+fetchProductDataAsync(completionHandler, failureHandler)
+
+// --------------------------------------------------------------------------------
+// Fetch data
+// --------------------------------------------------------------------------------
+
+function fetchProductDataAsync(completionHandler, failureHandler)
+{
+    var url = getApiUrl();
+
+    getDataFromUrlAsync(url, API_AUTHORIZATION_TOKEN)
+        .then(completionHandler)
+        .catch(failureHandler);
+}
+
+function getApiUrl()
+{
+    var resourceType = getDocumentResourceType();
+
+    var apiUrlSuffix = resourceType2ApiUrlSuffix(resourceType);
+    var apiUrl = API_BASE_URL + apiUrlSuffix;
+
+    return apiUrl;
+}
+
+// Generic function for asynchronous fetching of data. Can be reused in
+// other programs.
+//
+// url is mandatory.
+// authToken is optional.
+//
+// Returns a Promise.
+function getDataFromUrlAsync(url, authToken)
+{
+    return new Promise(
+        function(resolveHandler, rejectHandler)
+        {
+            var xhr = new XMLHttpRequest();
+
+            var isAsyncRequest = true;
+            xhr.open(
+                "GET",
+                url,
+                isAsyncRequest);
+
+            xhr.addEventListener(
+                "load",
+                function()
+                {
+                    if (xhr.status >= 200 && xhr.status <= 299)
+                    {
+                        resolveHandler(xhr.responseText);
+                    }
+                    else
+                    {
+                        var errorMessage =
+                            "Unable to fetch data from " + url +
+                            ". Request status code = " + xhr.status +
+                            ", status text = " + xhr.statusText
+                        rejectHandler(errorMessage);
+                    }
+                }
+            );
+
+            xhr.addEventListener(
+                "error",
+                function()
+                {
+                    var errorMessage =
+                        "Unable to fetch data from " + url +
+                        ". A network error occurred."
+                    rejectHandler(errorMessage);
+                }
+            );
+
+            if (authToken !== null)
+                xhr.setRequestHeader ("Authorization", authToken);
+
+                // User cannot cancel the operation, so we can ignore the "abort"
+            // event. Also we don't show any progress, so we can ignore the
+            // "progress" event as well.
+
+            xhr.send(null);
+        }
+    );
+}
+
+// --------------------------------------------------------------------------------
+// Process product data & generate HTML markup
+// --------------------------------------------------------------------------------
+
+function generateHtmlMarkupFromJsonData(jsonData)
+{
+    var resourceType = getDocumentResourceType();
+    var mainContentElement = getMainContentElement();
+
+    var products = JSON.parse(jsonData);
+    for (var indexOfProducts = 0; indexOfProducts < products.length; indexOfProducts++)
+    {
+        var product = products[indexOfProducts];
+
+        generateHtmlMarkupForProduct(product, mainContentElement, resourceType);
+    }
+
+    generateHtmlMarkupForEol(mainContentElement);
+}
+
+function generateHtmlMarkupForProduct(product, parentElement, resourceType)
+{
+    // In the beginning some markup is the same for all resource types
+
+    var productMainElement = generateProductMainElement(
+        parentElement,
+        product.id,
+        resourceType);
+    var productImageElement = generateProductImageElement(
+        productMainElement,
+        product.imageUrl,
+        product.name);
+
+    // From here on the markup is different for each resource type
+
+    switch (resourceType)
+    {
+        case RESOURCE_TYPE_PIZZA:
+            generateHtmlMarkupForPizza(product, productMainElement);
+            break;
+        case RESOURCE_TYPE_SALAD:
+            generateHtmlMarkupForSalad(product, productMainElement);
+            break;
+        case RESOURCE_TYPE_SOFTDRINK:
+            generateHtmlMarkupForSoftDrink(product, productMainElement);
+            break;
+        default:
+            break;
+    }
+}
+
+function generateHtmlMarkupForPizza(pizza, parentElement)
+{
+    var cartLineElement = generateCartLineElement(parentElement);
+
+    var productNameElement = generateProductNameElement(cartLineElement, pizza.name);
+    productNameElement.classList.add(CLASS_CART_LINE_PART1);
+
+    var productPriceAndCartElement = generateProductPriceAndCartElement(cartLineElement, pizza.prize);
+
+    var productIngredientsElement = generateProductIngredientsElement(parentElement, pizza.ingredients);
+}
+
+function generateHtmlMarkupForSalad(salad, parentElement)
+{
+}
+
+function generateHtmlMarkupForSoftDrink(softDrink, parentElement)
+{
+}
+
+function generateHtmlMarkupForEol(parentElement)
+{
+    var classNames = [CLASS_PRODUCT_EOL];
+
+    var divElement = createElement("div", parentElement, classNames);
+}
+
+// --------------------------------------------------------------------------------
+// Product-specific HTML markup generation
+// --------------------------------------------------------------------------------
+
+// Generates the main element that represents the entire product
+function generateProductMainElement(parentElement, productId, resourceType)
+{
+    var productClass = resourceType2ProductClass(resourceType);
+    var classNames = [CLASS_PRODUCT, productClass];
+
+    var idPrefix = resourceType2IdPrefix(resourceType);
+    var id = idPrefix + productId;
+
+    var divElement = createElement(
+        "div",
+        parentElement,
+        classNames,
+        id);
+
+    return divElement;
+}
+
+// Generates the main element for the product image and all of its contents
+function generateProductImageElement(parentElement, imageUrl, productName)
+{
+    var classNamesMainElement = [CLASS_PRODUCT_IMAGE, CLASS_PRODUCT_LINE];
+    var productImageElement = createElement(
+        "p",
+        parentElement,
+        classNamesMainElement);
+
+    var classNamesImgElement = [CLASS_PRODUCT_IMAGE];
+    var productImageImgElement = createImgElement(
+        productImageElement,
+        imageUrl,
+        productName,
+        classNamesImgElement);
+
+    return productImageElement;
+}
+
+// Generates the main element for the cart line, but WITHOUT content
+// (content depends on resource type)
+function generateCartLineElement(parentElement)
+{
+    var classNames = [CLASS_CART_LINE, CLASS_PRODUCT_LINE];
+
+    var cartLineElement = createElement(
+        "div",
+        parentElement,
+        classNames);
+
+    return cartLineElement;
+}
+
+// Generates the element that displays the product name
+function generateProductNameElement(parentElement, productName)
+{
+    var classNames = [CLASS_PRODUCT_NAME];
+
+    var productNameElement = createElement(
+        "p",
+        parentElement,
+        classNames);
+
+    productNameElement.innerText = productName;
+
+    return productNameElement;
+}
+
+// Generates the element that displays the product price and the shopping cart
+// image
+function generateProductPriceAndCartElement(parentElement, productPrice)
+{
+    var classNamesMainElement = [CLASS_PRODUCT_PRICEANDCART, CLASS_CART_LINE_PART2];
+    var productPriceAndCartElement = createElement(
+        "p",
+        parentElement,
+        classNamesMainElement);
+
+    var classNamesSpanElement = [CLASS_PRODUCT_PRICE];
+    var productPriceElement = createElement(
+        "span",
+        productPriceAndCartElement,
+        classNamesSpanElement);
+    productPriceElement.innerText = productPrice;
+
+    var classNamesImgElement = [CLASS_CART_IMAGE];
+    var cartImgElement = createImgElement(
+        productPriceAndCartElement,
+        CART_IMAGE_URL,
+        CART_IMAGE_TITLEANDALT,
+        classNamesImgElement);
+
+    return productPriceAndCartElement;
+}
+
+// Generates the element that displays the product ingredients
+function generateProductIngredientsElement(parentElement, productIngredients)
+{
+    var classNames = [CLASS_PRODUCT_INGREDIENTS, CLASS_PRODUCT_LINE];
+
+    var productIngredientsElement = createElement(
+        "p",
+        parentElement,
+        classNames);
+
+    productIngredientsElement.innerText = productIngredients;
+
+    return productIngredientsElement;
+}
+
+// --------------------------------------------------------------------------------
+// Generic HTML markup generation
+// --------------------------------------------------------------------------------
+
+// Creates an "img" element that has the same value for the "title" and
+// "alt" attributes.
+function createImgElement(parentElement, imageUrl, titleAndAlt, classNames)
+{
+    var imgElement = createElement("img", parentElement, classNames);
+
+    imgElement.setAttribute("src", imageUrl);
+    imgElement.setAttribute("title", titleAndAlt);
+    imgElement.setAttribute("alt", titleAndAlt);
+
+    return imgElement;
+}
+
+// Creates an element with the given name and adds it as the last child
+// to the given parent element.
+// Optionally specify an array of class names and/or a single ID. If present
+// these are added to the "id" and "class" attributes of the new element.
+function createElement(elementName, parentElement, classNames, id)
+{
+    var element = document.createElement(elementName);
+
+    parentElement.appendChild(element);
+
+    if (classNames !== undefined)
+    {
+        for (var indexOfClassNames = 0; indexOfClassNames < classNames.length; indexOfClassNames++)
+        {
+            var className = classNames[indexOfClassNames];
+            element.classList.add(className);
+        }
+    }
+
+    if (id !== undefined)
+    {
+        element.id = id;
+    }
+
+    return element;
+}
+
+// --------------------------------------------------------------------------------
+// Error handling
+// --------------------------------------------------------------------------------
+
+function generateHtmlMarkupWithErrorMessage(errorMessage)
+{
+    var mainContentElement = getMainContentElement();
+
+    var errorMessageElement = createElement("p", mainContentElement);
+
+    errorMessageElement.innerText = errorMessage;
+    errorMessageElement.style.color = "red";
+}
+
+// --------------------------------------------------------------------------------
+// Helper functions
+// --------------------------------------------------------------------------------
+
+function getMainContentElement()
+{
+    var mainContentElements = document.getElementsByClassName(CLASS_MAIN_CONTENT);
+    var mainContentElement = mainContentElements[0];
+    return mainContentElement;
+}
+
+function getDocumentResourceType()
+{
+    var pizzasElement = document.getElementById(ID_PIZZAS);
+    if (pizzasElement !== null)
+        return RESOURCE_TYPE_PIZZA;
+
+    var saladsElement = document.getElementById(ID_SALADS);
+    if (saladsElement !== null)
+        return RESOURCE_TYPE_SALAD;
+
+    var softDrinksElement = document.getElementById(ID_SOFTDRINKS);
+    if (softDrinksElement !== null)
+        return RESOURCE_TYPE_SOFTDRINK;
+
+    throw "Failed to determine resource type from document content";
+}
+
+function resourceType2ApiUrlSuffix(resourceType)
+{
+    switch (resourceType)
+    {
+        case RESOURCE_TYPE_PIZZA:
+            return API_URL_SUFFIX_PIZZA;
+        case RESOURCE_TYPE_SALAD:
+            return API_URL_SUFFIX_SALAD;
+        case RESOURCE_TYPE_SOFTDRINK:
+            return API_URL_SUFFIX_SOFTDRINK;
+        default:
+            throw "resourceType2ApiUrlSuffix: Unknown resource type";
+    }
+}
+
+function resourceType2ProductClass(resourceType)
+{
+    switch (resourceType)
+    {
+        case RESOURCE_TYPE_PIZZA:
+            return CLASS_PRODUCT_PIZZA;
+        case RESOURCE_TYPE_SALAD:
+            return CLASS_PRODUCT_SALAD;
+        case RESOURCE_TYPE_SOFTDRINK:
+            return CLASS_PRODUCT_SOFTDRINK;
+        default:
+            throw "resourceType2ProductClass: Unknown resource type";
+    }
+}
+
+function resourceType2IdPrefix(resourceType)
+{
+    switch (resourceType)
+    {
+        case RESOURCE_TYPE_PIZZA:
+            return ID_PREFIX_PIZZA;
+        case RESOURCE_TYPE_SALAD:
+            return ID_PREFIX_SALAD;
+        case RESOURCE_TYPE_SOFTDRINK:
+            return ID_PREFIX_SOFTDRINK;
+        default:
+            throw "resourceType2IdPrefix: Unknown resource type";
+    }
+}

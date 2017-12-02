@@ -541,6 +541,15 @@ body {
         vertical-align: top;
     }
 
+    .cart-image {
+        /*
+            Set height to one line (same value as line-height further up).
+            Set width to the same value as height.
+         */
+        width: 1.3em;
+        height: 1.3em;
+    }
+
     .product-ingredients {
         /* Display the ingredients list in a smaller-than-normal font */
         font-size: 0.75em;
