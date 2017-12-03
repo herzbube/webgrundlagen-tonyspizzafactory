@@ -732,6 +732,33 @@ body {
     form span.error-message {
         display: none;
     }
+
+    /*
+        Color and border styles shamelessly stolen from Bootstrap Alerts.
+     */
+    form div.alert {
+        /* Hide all alerts by default. Use "display: block" to show them */
+        display: none;
+        padding: 0.75em;
+        /*
+            If we specify a width to the alert we want the padding to be part
+            of the specified width. A width will be applied by other media
+            queries.
+         */
+        box-sizing: border-box;
+        border: 1px solid;
+        border-radius: 4px;
+    }
+    form div.alert-success {
+        color: #3c763d;
+        background-color: #dff0d8;
+        border-color: #d6e9c6;
+    }
+    form div.alert-error {
+        color: #a94442;
+        background-color: #f2dede;
+        border-color: #ebccd1;
+    }
 }
 
 /*
@@ -945,16 +972,16 @@ body {
         width: 60%;
     }
     form span.error-message {
-        /* Same width as the text input controls */
-        width: 60%;
         /* Make this into block so that we can apply a margin */
         display: block;
-        /* Align with the text input controls */
-        margin-left: 40%;
     }
-
-    /* Hide all error messages by default. Use "display: block" to show them */
-    form span.error-message {
-        display: none;
+    form span.error-message, form div.alert {
+        /* Same width as the text input controls */
+        width: 60%;
+        /*
+            Align with the text input controls. For "span" this works only
+            because above we made the element display as "block".
+         */
+        margin-left: 40%;
     }
 }

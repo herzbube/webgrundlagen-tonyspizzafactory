@@ -349,17 +349,27 @@ function submitFormData()
     var authToken = API_AUTHORIZATION_TOKEN;
 
     postDataToUrlAsync(url, jsonData, contentType, authToken)
-        .then(postSuccess)
-        .catch(postFailure);
+        .then(postDataSuccessful)
+        .catch(postDataFailed);
 }
 
-function postSuccess(foo)
+function postDataSuccessful(responseText)
 {
-    alert("success: " + foo);
+    var alertSuccessElement = getAlertSuccessElement();
+
+    alertSuccessElement.innerText = "Thank you for taking the time to give us your feedback.";
+
+    alertSuccessElement.style.display = "block";
 }
-function postFailure(foo)
+function postDataFailed(errorMessage)
 {
-    alert("failed: " + foo);
+    var alertErrorElement = getAlertErrorElement();
+
+    alertErrorElement.innerHTML =
+        "Oops! Something went wrong, your feedback could not be submitted to our server. " +
+        "Here's the technical error message: <br/><br/>" + errorMessage;
+
+    alertErrorElement.style.display = "block";
 }
 
 // Generic function for asynchronous posting of data. Can be reused in
@@ -523,6 +533,16 @@ function getFeedbackForm()
         return document.forms[0];
     else
         return null;
+}
+
+function getAlertSuccessElement()
+{
+    return document.getElementsByClassName("alert-success")[0];
+}
+
+function getAlertErrorElement()
+{
+    return document.getElementsByClassName("alert-error")[0];
 }
 
 // --------------------------------------------------------------------------------
