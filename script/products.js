@@ -346,6 +346,8 @@ function generateProductNameElement(parentElement, productName)
 
 // Generates the element that displays the product price and the shopping cart
 // image
+// Note: The product price includes the currency sign (e.g. "42$"), so it's
+// not a number.
 function generateProductPriceAndCartElement(parentElement, productPrice)
 {
     var classNamesMainElement = [CLASS_PRODUCT_PRICEANDCART, CLASS_CART_LINE_PART2];
@@ -374,6 +376,8 @@ function generateProductPriceAndCartElement(parentElement, productPrice)
 // Generates the element that displays the product ingredients
 function generateProductIngredientsElement(parentElement, productIngredients)
 {
+    // TODO: Add space character between ingredients
+
     var classNames = [CLASS_PRODUCT_INGREDIENTS, CLASS_PRODUCT_LINE];
 
     var productIngredientsElement = createElement(
