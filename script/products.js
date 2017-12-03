@@ -70,10 +70,19 @@ var CLASS_CART_LINE = "cart-line";
 var CLASS_CART_LINE_PART1 = "cart-line-part1";
 var CLASS_CART_LINE_PART2 = "cart-line-part2";
 var CLASS_CART_IMAGE = "cart-image";
+// Select classes
+var CLASS_SELECT_SALADDRESSING = "salad-dressing";
+var CLASS_SELECT_DRINKSIZE = "drink-size";
 
 var CART_IMAGE_TITLEANDALT = "Place into shopping cart";
 // cart by Alfa Design from the Noun Project
 var CART_IMAGE_URL = "../image/noun_927435_cc.svg";
+
+var SELECT_SIZE = 1;
+var SELECT_NAME_SALADDRESSING = "salad-dressing";
+var SELECT_NAME_DRINKSIZE = "drink-size";
+var SELECT_TITLE_DRESSING = "Dressing";
+var SELECT_TITLE_DRINKSIZE = "Drink size";
 
 // --------------------------------------------------------------------------------
 // Launch the whole process
@@ -259,12 +268,93 @@ function generateHtmlMarkupForPizza(pizza, parentElement)
     var productIngredientsElement = generateProductIngredientsElement(parentElement, pizza.ingredients);
 }
 
+/*
+    A salad product block looks like this. Words in UPPERCASE refer to
+    dynamic content.
+
+    <div class="product salad" id="salad-PRODUCTID">
+        <p class="product-image product-line">
+            <img
+                    class="product-image"
+                    title="PRODUCTNAME"
+                    alt="PRODUCTNAME"
+                    src="IMAGEURL"
+            />
+        </p>
+        <p class="product-name product-line">PRODUCTNAME</p>
+        <p class="product-ingredients product-line">PRODUCTINGREDIENTS</p>
+        <div class="cart-line product-line">
+            <select size="1" name="salad-dressing" title="Dressing" class="salad-dressing cart-line-part1">
+                <option value="italian">Italian dressing</option>
+                <option value="french">French dressing</option>
+            </select>
+            <p class="product-price-and-cart cart-line-part2">
+                <span class="product-price">PRODUCTPRICE</span>
+                <img
+                        class="cart-image"
+                        title="Place into shopping cart"
+                        alt="Place into shopping cart"
+                        src="IMAGEURL"
+                />
+            </p>
+        </div>
+    </div>
+ */
 function generateHtmlMarkupForSalad(salad, parentElement)
 {
+    var productNameElement = generateProductNameElement(parentElement, salad.name);
+    productNameElement.classList.add(CLASS_PRODUCT_LINE);
+
+    var productIngredientsElement = generateProductIngredientsElement(parentElement, salad.ingredients);
+
+    var cartLineElement = generateCartLineElement(parentElement);
+
+    var selectElement = generateSelectElement(cartLineElement, RESOURCE_TYPE_SALAD);
+
+    var productPriceAndCartElement = generateProductPriceAndCartElement(cartLineElement, salad.prize);
 }
 
+/*
+    A soft drink product block looks like this. Words in UPPERCASE refer to
+    dynamic content.
+
+    <div class="product soft-drink" id="softdrink-PRODUCTID">
+        <p class="product-image product-line">
+            <img
+                    class="product-image"
+                    title="PRODUCTNAME"
+                    alt="PRODUCTNAME"
+                    src="IMAGEURL"
+            />
+        </p>
+        <p class="product-name product-line">PRODUCTNAME</p>
+        <div class="cart-line product-line">
+            <select size="1" name="drink-size" title="Drink size" class="drink-size cart-line-part1">
+                <option value="italian">50cl</option>
+                <option value="french">33cl</option>
+            </select>
+            <p class="product-price-and-cart cart-line-part2">
+                <span class="product-price">PRODUCTPRICE</span>
+                <img
+                        class="cart-image"
+                        title="Place into shopping cart"
+                        alt="Place into shopping cart"
+                        src="IMAGEURL"
+                />
+            </p>
+        </div>
+    </div>
+ */
 function generateHtmlMarkupForSoftDrink(softDrink, parentElement)
 {
+    var productNameElement = generateProductNameElement(parentElement, softDrink.name);
+    productNameElement.classList.add(CLASS_PRODUCT_LINE);
+
+    var cartLineElement = generateCartLineElement(parentElement);
+
+    var selectElement = generateSelectElement(cartLineElement, RESOURCE_TYPE_SOFTDRINK);
+
+    var productPriceAndCartElement = generateProductPriceAndCartElement(cartLineElement, softDrink.prize);
 }
 
 function generateHtmlMarkupForEol(parentElement)
@@ -390,6 +480,21 @@ function generateProductIngredientsElement(parentElement, productIngredients)
     return productIngredientsElement;
 }
 
+// Generates the element that displays the selection for either salad dressing
+// or drink size. The specified resource type which one is generated.
+function generateSelectElement(parentElement, resourceType)
+{
+    var size = SELECT_SIZE;
+    var name = resourceType2SelectName(resourceType);
+    var title = resourceType2SelectTitle(resourceType);
+    var selectClass = resourceType2SelectClass(resourceType);
+    var classNames = [selectClass, CLASS_CART_LINE_PART1];
+    var optionsData = resourceType2OptionsData(resourceType);
+
+    var selectElement = createSelectElement(parentElement, size, name, title, classNames);
+    createOptionElements(selectElement, optionsData);
+}
+
 // --------------------------------------------------------------------------------
 // Generic HTML markup generation
 // --------------------------------------------------------------------------------
@@ -405,6 +510,37 @@ function createImgElement(parentElement, imageUrl, titleAndAlt, classNames)
     imgElement.setAttribute("alt", titleAndAlt);
 
     return imgElement;
+}
+
+// Creates a "select" element with specified values for the "size",
+// "name" and "title" attributes.
+function createSelectElement(parentElement, size, name, title, classNames)
+{
+    var selectElement = createElement("select", parentElement, classNames);
+
+    selectElement.setAttribute("size", size);
+    selectElement.setAttribute("name", name);
+    selectElement.setAttribute("title", title);
+
+    return selectElement;
+}
+
+// Creates a number of "option" elements with data from the specified
+// optionsData array. The number of elements corresponds to the number
+// of items in the array.
+//
+// Unlike the other create... functions this function does NOT return
+// anything.
+function createOptionElements(parentElement, optionsData)
+{
+    for (var indexOfOptionsData = 0; indexOfOptionsData < optionsData.length; indexOfOptionsData++)
+    {
+        var optionElement = createElement("option", parentElement);
+
+        var optionData = optionsData[indexOfOptionsData];
+        optionElement.setAttribute("value", optionData.value);
+        optionElement.innerText = optionData.text;
+    }
 }
 
 // Creates an element with the given name and adds it as the last child
@@ -518,5 +654,83 @@ function resourceType2IdPrefix(resourceType)
             return ID_PREFIX_SOFTDRINK;
         default:
             throw "resourceType2IdPrefix: Unknown resource type";
+    }
+}
+
+function resourceType2SelectName(resourceType)
+{
+    switch (resourceType)
+    {
+        case RESOURCE_TYPE_SALAD:
+            return SELECT_NAME_SALADDRESSING;
+        case RESOURCE_TYPE_SOFTDRINK:
+            return SELECT_NAME_DRINKSIZE;
+        default:
+            throw "resourceType2SelectName: Unknown resource type";
+    }
+}
+
+function resourceType2SelectTitle(resourceType)
+{
+    switch (resourceType)
+    {
+        case RESOURCE_TYPE_SALAD:
+            return SELECT_TITLE_DRESSING;
+        case RESOURCE_TYPE_SOFTDRINK:
+            return SELECT_TITLE_DRINKSIZE;
+        default:
+            throw "resourceType2SelectTitle: Unknown resource type";
+    }
+}
+
+function resourceType2SelectClass(resourceType)
+{
+    switch (resourceType)
+    {
+        case RESOURCE_TYPE_SALAD:
+            return CLASS_SELECT_SALADDRESSING;
+        case RESOURCE_TYPE_SOFTDRINK:
+            return CLASS_SELECT_DRINKSIZE;
+        default:
+            throw "resourceType2SelectClass: Unknown resource type";
+    }
+}
+
+function resourceType2OptionsData(resourceType)
+{
+    switch (resourceType)
+    {
+        case RESOURCE_TYPE_SALAD:
+        {
+            var optionsDataSalad =
+                [
+                    {
+                        "value" : "italian",
+                        "text" : "Italian Dressing",
+                    },
+                    {
+                        "value" : "french",
+                        "text" : "French Dressing",
+                    }
+                ];
+            return optionsDataSalad;
+        }
+        case RESOURCE_TYPE_SOFTDRINK:
+        {
+            var optionsDataSoftDrink =
+            [
+                {
+                    "value" : "50cl",
+                    "text" : "50cl",
+                },
+                {
+                    "value" : "33cl",
+                    "text" : "33cl",
+                }
+            ];
+            return optionsDataSoftDrink;
+        }
+        default:
+            throw "resourceType2OptionsData: Unknown resource type";
     }
 }
