@@ -22,7 +22,10 @@
 //   (is...Valid, are...Valid).
 // --------------------------------------------------------------------------------
 
-// Global variables
+// --------------------------------------------------------------------------------
+// Global variables and constants
+// --------------------------------------------------------------------------------
+
 // Update these using the corresponding checkIf... functions
 // The form is valid only if all these flags are true
 var isPizzaRatingValid = false;
@@ -30,6 +33,15 @@ var isPriceRatingValid = false;
 var isCustomerNameValid = false;
 var isCustomerEmailValid = false;
 var areSuggestionsValid = false;
+
+// Constants
+var API_POST_URL = "https://tonyspizzafactory.herokuapp.com/api/";
+var API_CONTENT_TYPE = "application/json; charset=utf-8"
+var API_AUTHORIZATION_TOKEN = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.MQ.bYceSpllpyYQixgNzDt7dpCkEojdv3NKD-85XLXfdI4";
+
+// --------------------------------------------------------------------------------
+// Script startup code
+// --------------------------------------------------------------------------------
 
 addEventListeners();
 
@@ -93,13 +105,20 @@ function addEventListeners()
 
 function onFeedbackFormSubmitted(event)
 {
+    // Always prevent the submit event. If the form data is invalid we don't
+    // want the submission to take place. But even if the form data is valid,
+    // we are going to submit the data ourselves.
+    event.preventDefault();
+
     validateAllInputFields();
     updateForm();
 
     // Variable names must be different from function names :-(
     var isFormValidResult = isFormValid();
     if (! isFormValidResult)
-        event.preventDefault();
+        return;
+
+    submitFormData()
 }
 
 // --------------------------------------------------------------------------------
@@ -235,11 +254,8 @@ function validateCustomerName()
 
 function checkIfCustomerNameIsValid()
 {
-    var customerNameTextfield = getCustomerNameTextfield();
-    if (null === customerNameTextfield)
-        return false;
+    var customerName = getCustomerName();
 
-    var customerName = customerNameTextfield.value.trim();
     if (customerName.length > 0)
         return true;
     else
@@ -259,11 +275,8 @@ function validateCustomerEmail()
 
 function checkIfCustomerEmailIsValid()
 {
-    var customerEmailTextfield = getCustomerEmailTextfield();
-    if (null === customerEmailTextfield)
-        return false;
+    var customerEmail = getCustomerEmail();
 
-    var customerEmail = customerEmailTextfield.value.trim();
     if (0 === customerEmail.length)
         return false;
 
@@ -301,15 +314,170 @@ function validateSuggestions()
 
 function checkIfSuggestionsAreValid()
 {
-    var suggestionsTextfield = getSuggestionsTextfield();
-    if (null === suggestionsTextfield)
-        return false;
+    var suggestions = getSuggestionsValue();
 
-    var suggestions = suggestionsTextfield.value.trim();
     if (suggestions.length >= 50)
         return true;
     else
         return false;
+}
+
+// --------------------------------------------------------------------------------
+// Form submission functions
+// --------------------------------------------------------------------------------
+
+function submitFormData()
+{
+    var pizzaRating = getPizzaRating();
+    var priceRating = getPriceRating();
+    var customerName = getCustomerName();
+    var customerEmail = getCustomerEmail();
+    var suggestions = getSuggestionsValue();
+
+    var formData =
+    {
+        "pizzaRating": pizzaRating,
+        "prizeRating": priceRating,
+        "name": customerName,
+        "email": customerEmail,
+        "feedback": suggestions,
+    }
+
+    var url = API_POST_URL;
+    var jsonData = JSON.stringify(formData);
+    var contentType = API_CONTENT_TYPE;
+    var authToken = API_AUTHORIZATION_TOKEN;
+
+    postDataToUrlAsync(url, jsonData, contentType, authToken)
+        .then(postSuccess)
+        .catch(postFailure);
+}
+
+function postSuccess(foo)
+{
+    alert("success: " + foo);
+}
+function postFailure(foo)
+{
+    alert("failed: " + foo);
+}
+
+// Generic function for asynchronous posting of data. Can be reused in
+// other programs.
+//
+// url, data and contentType are mandatory.
+// authToken is optional.
+//
+// Returns a Promise.
+function postDataToUrlAsync(url, data, contentType, authToken)
+{
+    return new Promise(
+        function(resolveHandler, rejectHandler)
+        {
+            var xhr = new XMLHttpRequest();
+
+            var isAsyncRequest = true;
+            xhr.open(
+                "POST",
+                url,
+                isAsyncRequest);
+
+            xhr.addEventListener(
+                "load",
+                function()
+                {
+                    if (xhr.status >= 200 && xhr.status <= 299)
+                    {
+                        resolveHandler(xhr.responseText);
+                    }
+                    else
+                    {
+                        var errorMessage =
+                            "Unable to post data to " + url +
+                            ". Request status code = " + xhr.status +
+                            ", status text = " + xhr.statusText;
+                        rejectHandler(errorMessage);
+                    }
+                }
+            );
+
+            xhr.addEventListener(
+                "error",
+                function()
+                {
+                    var errorMessage =
+                        "Unable to post data to " + url +
+                        ". A network error occurred.";
+                    rejectHandler(errorMessage);
+                }
+            );
+
+            xhr.setRequestHeader("content-type", contentType);
+
+            if (authToken !== null)
+                xhr.setRequestHeader ("Authorization", authToken);
+
+            // User cannot cancel the operation, so we can ignore the "abort"
+            // event. Also we don't show any progress, so we can ignore the
+            // "progress" event as well.
+
+            xhr.send(data);
+        }
+    );
+}
+
+// --------------------------------------------------------------------------------
+// Form data getter functions
+// --------------------------------------------------------------------------------
+
+function getPizzaRating()
+{
+    var pizzaRatingRadioButtons = getPizzaRatingRadioButtons();
+
+    var pizzaRating = getValueOfCheckedRadioButton(pizzaRatingRadioButtons);
+
+    // Return the value from the HTML markup without any changes
+    return pizzaRating;
+}
+
+function getPriceRating()
+{
+    var priceRatingRadioButtons = getPriceRatingRadioButtons();
+
+    var priceRating = getValueOfCheckedRadioButton(priceRatingRadioButtons);
+
+    // Return the value from the HTML markup without any changes
+    return priceRating;
+}
+
+function getCustomerName()
+{
+    var customerNameTextfield = getCustomerNameTextfield();
+    var customerName = customerNameTextfield.value;
+
+    var customerNameTrimmed = customerName.trim();
+
+    return customerNameTrimmed;
+}
+
+function getCustomerEmail()
+{
+    var customerEmailTextfield = getCustomerEmailTextfield();
+    var customerEmail = customerEmailTextfield.value;
+
+    var customerEmailTrimmed = customerEmail.trim();
+
+    return customerEmailTrimmed;
+}
+
+function getSuggestionsValue()
+{
+    var suggestionsTextfield = getSuggestionsTextfield();
+    var suggestions = suggestionsTextfield.value;
+
+    var suggestionsTrimmed = suggestions.trim();
+
+    return suggestionsTrimmed;
 }
 
 // --------------------------------------------------------------------------------
@@ -370,6 +538,20 @@ function isAnyRadioButtonChecked(radioButtonsArray)
         var radioButton = radioButtonsArray[indexOfRadioButtonsArray];
         if (radioButton.checked)
             return true;
+    }
+
+    return false;
+}
+
+function getValueOfCheckedRadioButton(radioButtonsArray)
+{
+    for (var indexOfRadioButtonsArray = 0;
+         indexOfRadioButtonsArray < radioButtonsArray.length;
+         indexOfRadioButtonsArray++)
+    {
+        var radioButton = radioButtonsArray[indexOfRadioButtonsArray];
+        if (radioButton.checked)
+            return radioButton.value;
     }
 
     return false;
