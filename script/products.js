@@ -84,7 +84,7 @@ var SELECT_TITLE_DRESSING = "Dressing";
 var SELECT_TITLE_DRINKSIZE = "Drink size";
 
 // --------------------------------------------------------------------------------
-// Launch the whole process
+// Script startup code
 // --------------------------------------------------------------------------------
 
 var completionHandler = generateHtmlMarkupFromJsonData;
