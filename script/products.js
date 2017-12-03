@@ -219,6 +219,34 @@ function generateHtmlMarkupForProduct(product, parentElement, resourceType)
     }
 }
 
+/*
+    A pizza product block looks like this. Words in UPPERCASE refer to
+    dynamic content.
+
+    <div class="product pizza" id="pizza-PRODUCTID">
+        <p class="product-image product-line">
+            <img
+                    class="product-image"
+                    title="PRODUCTNAME"
+                    alt="PRODUCTNAME"
+                    src="IMAGEURL"
+            />
+        </p>
+        <div class="cart-line product-line">
+            <p class="product-name cart-line-part1">PRODUCTNAME</p>
+            <p class="product-price-and-cart cart-line-part2">
+                <span class="product-price">PRODUCTPRICE</span>
+                <img
+                        class="cart-image"
+                        title="Place into shopping cart"
+                        alt="Place into shopping cart"
+                        src="IMAGEURL"
+                />
+            </p>
+        </div>
+        <p class="product-ingredients product-line">PRODUCTINGREDIENTS</p>
+    </div>
+ */
 function generateHtmlMarkupForPizza(pizza, parentElement)
 {
     var cartLineElement = generateCartLineElement(parentElement);
