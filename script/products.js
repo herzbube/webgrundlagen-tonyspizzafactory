@@ -90,7 +90,7 @@ var SELECT_TITLE_DRINKSIZE = "Drink size";
 
 var completionHandler = generateHtmlMarkupFromJsonData;
 var failureHandler = generateHtmlMarkupWithErrorMessage;
-fetchProductDataAsync(completionHandler, failureHandler)
+fetchProductDataAsync(completionHandler, failureHandler);
 
 // --------------------------------------------------------------------------------
 // Fetch data
@@ -148,7 +148,7 @@ function getDataFromUrlAsync(url, authToken)
                         var errorMessage =
                             "Unable to fetch data from " + url +
                             ". Request status code = " + xhr.status +
-                            ", status text = " + xhr.statusText
+                            ", status text = " + xhr.statusText;
                         rejectHandler(errorMessage);
                     }
                 }
@@ -160,7 +160,7 @@ function getDataFromUrlAsync(url, authToken)
                 {
                     var errorMessage =
                         "Unable to fetch data from " + url +
-                        ". A network error occurred."
+                        ". A network error occurred.";
                     rejectHandler(errorMessage);
                 }
             );
