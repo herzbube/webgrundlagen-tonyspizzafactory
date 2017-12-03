@@ -28,10 +28,9 @@
 // Global constants
 // --------------------------------------------------------------------------------
 
-var RESOURCE_TYPE_UNDEFINED = 0;
-var RESOURCE_TYPE_PIZZA = 1;
-var RESOURCE_TYPE_SALAD = 2;
-var RESOURCE_TYPE_SOFTDRINK = 3;
+var RESOURCE_TYPE_PIZZA = 0;
+var RESOURCE_TYPE_SALAD = 1;
+var RESOURCE_TYPE_SOFTDRINK = 2;
 
 var API_BASE_URL = "https://tonyspizzafactory.herokuapp.com/api/";
 var API_URL_SUFFIX_PIZZA = "pizzas";
