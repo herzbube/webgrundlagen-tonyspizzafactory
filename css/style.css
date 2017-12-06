@@ -734,9 +734,15 @@ body {
     }
 
     /*
+        -----------------------------------------------------------------------
+        Alert styles
+        -----------------------------------------------------------------------
+     */
+
+    /*
         Color and border styles shamelessly stolen from Bootstrap Alerts.
      */
-    form div.alert {
+    div.alert {
         /* Hide all alerts by default. Use "display: block" to show them */
         display: none;
         padding: 0.75em;
@@ -749,12 +755,12 @@ body {
         border: 1px solid;
         border-radius: 4px;
     }
-    form div.alert-success {
+    div.alert-success {
         color: #3c763d;
         background-color: #dff0d8;
         border-color: #d6e9c6;
     }
-    form div.alert-error {
+    div.alert-error {
         color: #a94442;
         background-color: #f2dede;
         border-color: #ebccd1;
