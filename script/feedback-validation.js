@@ -35,7 +35,7 @@ var isCustomerEmailValid = false;
 var areSuggestionsValid = false;
 
 // Constants
-var API_POST_URL = "https://tonyspizzafactory.herokuapp.com/api/";
+var API_POST_URL = "https://tonyspizzafactory.herokuapp.com/api/feedback";
 var API_CONTENT_TYPE = "application/json; charset=utf-8"
 var API_AUTHORIZATION_TOKEN = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.MQ.bYceSpllpyYQixgNzDt7dpCkEojdv3NKD-85XLXfdI4";
 
