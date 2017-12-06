@@ -5,6 +5,14 @@
 // - Asynchronously fetch data
 // - Once data has been fetched, iterate over each data item and generate
 //   a corresponding block of HTML markup for the item
+// - A click event listener is registered as an anonymous function in the
+//   generateProductPriceAndCartElement() function. The event listener
+//   calls the function shoppingCartClicked(), which in turn invokes
+//   postDataToUrlAsync() to submit the data to the server API.
+// - When the POST request finishes, an alert is generated dynamically to
+//   either display a success note or an error message.
+//   TODO: The alerts cannot be dismissed at the moment, the user needs to
+//   reload the page to get rid of any alerts.
 //
 // Coding style notes:
 // - There is error handling to handle network problems when fetching data.
@@ -36,6 +44,8 @@ var API_BASE_URL = "https://tonyspizzafactory.herokuapp.com/api/";
 var API_URL_SUFFIX_PIZZA = "pizzas";
 var API_URL_SUFFIX_SALAD = "salads";
 var API_URL_SUFFIX_SOFTDRINK = "softdrinks";
+var API_URL_SUFFIX_ORDERS = "orders";
+var API_CONTENT_TYPE = "application/json; charset=utf-8"
 var API_AUTHORIZATION_TOKEN = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.MQ.bYceSpllpyYQixgNzDt7dpCkEojdv3NKD-85XLXfdI4";
 
 var ID_PIZZAS = "pizzas";
@@ -72,6 +82,10 @@ var CLASS_CART_IMAGE = "cart-image";
 // Select classes
 var CLASS_SELECT_SALADDRESSING = "salad-dressing";
 var CLASS_SELECT_DRINKSIZE = "drink-size";
+// Alert classes
+var CLASS_ALERT = "alert";
+var CLASS_ALERT_SUCCESS = "alert-success";
+var CLASS_ALERT_ERROR = "alert-error";
 
 var CART_IMAGE_TITLEANDALT = "Place into shopping cart";
 // cart by Alfa Design from the Noun Project
@@ -96,6 +110,9 @@ var SHOPPING_CART_DATA_DRESSING_FRENCH = "french";
 var SHOPPING_CART_DATA_DRINKSIZE_25CL = "25";
 var SHOPPING_CART_DATA_DRINKSIZE_50CL = "50";
 var SHOPPING_CART_DATA_DRINKSIZE_100CL = "100";
+
+var ALERT_TYPE_SUCCESS = 0;
+var ALERT_TYPE_ERROR = 1;
 
 // --------------------------------------------------------------------------------
 // Script startup code
@@ -191,6 +208,129 @@ function getDataFromUrlAsync(url, authToken)
 }
 
 // --------------------------------------------------------------------------------
+// Post shopping cart data
+// --------------------------------------------------------------------------------
+
+function shoppingCartClicked(resourceType, product, selectElement)
+{
+    var shoppingCartData = createShoppingCartData(resourceType, product, selectElement);
+
+    var apiUrl = API_BASE_URL + API_URL_SUFFIX_ORDERS;
+    var jsonData = JSON.stringify(shoppingCartData);
+    var contentType = API_CONTENT_TYPE;
+    var authToken = API_AUTHORIZATION_TOKEN;
+    var contextData = product;
+
+    postDataToUrlAsync(apiUrl, jsonData, contentType, authToken, contextData)
+        .then(postDataSuccessful)
+        .catch(postDataFailed);
+}
+
+function postDataSuccessful(resultObject)
+{
+    var responseText = resultObject.resultText;
+    var product = resultObject.contextData;
+    var productId = product.id;
+
+    var alertSuccessElement = createAlertSuccessElement(productId);
+
+    alertSuccessElement.innerText = "Thank you for placing your order with us.";
+
+    alertSuccessElement.style.display = "block";
+}
+
+function postDataFailed(resultObject)
+{
+    var errorMessage = resultObject.resultText;
+    var product = resultObject.contextData;
+    var productId = product.id;
+
+    var alertErrorElement = createAlertErrorElement(productId);
+
+    alertErrorElement.innerHTML =
+        "Oops! Something went wrong, your order could not be submitted to our server. " +
+        "Here's the technical error message: <br/><br/>" + errorMessage;
+
+    alertErrorElement.style.display = "block";
+}
+
+// Generic function for asynchronous posting of data. Can be reused in
+// other programs.
+//
+// url, data and contentType are mandatory.
+// authToken and contextData are optional.
+//
+// Returns a Promise.
+//
+// The Promise will invoke the handlers passed to then() and catch() with an
+// object that looks like this:
+// {
+//   "resultText": "a string",     // The response text on success,
+//                                 // or an error message on failure
+//   "contextData" : contextData,  // The value of the contextData parameter,
+//                                 // or undefined if the parameter is omitted
+// }
+function postDataToUrlAsync(url, data, contentType, authToken, contextData)
+{
+    return new Promise(
+        function(resolveHandler, rejectHandler)
+        {
+            var xhr = new XMLHttpRequest();
+
+            var isAsyncRequest = true;
+            xhr.open(
+                "POST",
+                url,
+                isAsyncRequest);
+
+            xhr.addEventListener(
+                "load",
+                function()
+                {
+                    if (xhr.status >= 200 && xhr.status <= 299)
+                    {
+                        var resultObject = createResultObject(xhr.responseText, contextData);
+                        resolveHandler(resultObject);
+                    }
+                    else
+                    {
+                        var errorMessage =
+                            "Unable to post data to " + url +
+                            ". Request status code = " + xhr.status +
+                            ", status text = " + xhr.statusText;
+                        var resultObject = createResultObject(errorMessage, contextData);
+                        rejectHandler(resultObject);
+                    }
+                }
+            );
+
+            xhr.addEventListener(
+                "error",
+                function()
+                {
+                    var errorMessage =
+                        "Unable to post data to " + url +
+                        ". A network error occurred.";
+                    var resultObject = createResultObject(errorMessage, contextData);
+                    rejectHandler(resultObject);
+                }
+            );
+
+            xhr.setRequestHeader("content-type", contentType);
+
+            if (authToken !== null)
+                xhr.setRequestHeader ("Authorization", authToken);
+
+            // User cannot cancel the operation, so we can ignore the "abort"
+            // event. Also we don't show any progress, so we can ignore the
+            // "progress" event as well.
+
+            xhr.send(data);
+        }
+    );
+}
+
+// --------------------------------------------------------------------------------
 // Process product data & generate HTML markup
 // --------------------------------------------------------------------------------
 
@@ -258,11 +398,13 @@ function generateHtmlMarkupForProduct(product, parentElement, resourceType)
             <p class="product-name cart-line-part1">PRODUCTNAME</p>
             <p class="product-price-and-cart cart-line-part2">
                 <span class="product-price">PRODUCTPRICE</span>
-                <img
-                        class="cart-image"
-                        title="Place into shopping cart"
-                        alt="Place into shopping cart"
-                        src="IMAGEURL"
+                <a href="#"
+                    <img
+                            class="cart-image"
+                            title="Place into shopping cart"
+                            alt="Place into shopping cart"
+                            src="IMAGEURL"
+                    />
                 />
             </p>
         </div>
@@ -276,7 +418,10 @@ function generateHtmlMarkupForPizza(pizza, parentElement)
     var productNameElement = generateProductNameElement(cartLineElement, pizza.name);
     productNameElement.classList.add(CLASS_CART_LINE_PART1);
 
-    var productPriceAndCartElement = generateProductPriceAndCartElement(cartLineElement, pizza.prize);
+    var productPriceAndCartElement = generateProductPriceAndCartElement(
+        cartLineElement,
+        RESOURCE_TYPE_PIZZA,
+        pizza);
 
     var productIngredientsElement = generateProductIngredientsElement(parentElement, pizza.ingredients);
 }
@@ -303,11 +448,13 @@ function generateHtmlMarkupForPizza(pizza, parentElement)
             </select>
             <p class="product-price-and-cart cart-line-part2">
                 <span class="product-price">PRODUCTPRICE</span>
-                <img
-                        class="cart-image"
-                        title="Place into shopping cart"
-                        alt="Place into shopping cart"
-                        src="IMAGEURL"
+                <a href="#"
+                    <img
+                            class="cart-image"
+                            title="Place into shopping cart"
+                            alt="Place into shopping cart"
+                            src="IMAGEURL"
+                    />
                 />
             </p>
         </div>
@@ -324,7 +471,11 @@ function generateHtmlMarkupForSalad(salad, parentElement)
 
     var selectElement = generateSelectElement(cartLineElement, RESOURCE_TYPE_SALAD);
 
-    var productPriceAndCartElement = generateProductPriceAndCartElement(cartLineElement, salad.prize);
+    var productPriceAndCartElement = generateProductPriceAndCartElement(
+        cartLineElement,
+        RESOURCE_TYPE_SALAD,
+        salad,
+        selectElement);
 }
 
 /*
@@ -349,11 +500,13 @@ function generateHtmlMarkupForSalad(salad, parentElement)
             </select>
             <p class="product-price-and-cart cart-line-part2">
                 <span class="product-price">PRODUCTPRICE</span>
-                <img
-                        class="cart-image"
-                        title="Place into shopping cart"
-                        alt="Place into shopping cart"
-                        src="IMAGEURL"
+                <a href="#"
+                    <img
+                            class="cart-image"
+                            title="Place into shopping cart"
+                            alt="Place into shopping cart"
+                            src="IMAGEURL"
+                    />
                 />
             </p>
         </div>
@@ -368,7 +521,11 @@ function generateHtmlMarkupForSoftDrink(softDrink, parentElement)
 
     var selectElement = generateSelectElement(cartLineElement, RESOURCE_TYPE_SOFTDRINK);
 
-    var productPriceAndCartElement = generateProductPriceAndCartElement(cartLineElement, softDrink.prize);
+    var productPriceAndCartElement = generateProductPriceAndCartElement(
+        cartLineElement,
+        RESOURCE_TYPE_SOFTDRINK,
+        softDrink,
+        selectElement);
 }
 
 function generateHtmlMarkupForEol(parentElement)
@@ -388,14 +545,13 @@ function generateProductMainElement(parentElement, productId, resourceType)
     var productClass = resourceType2ProductClass(resourceType);
     var classNames = [CLASS_PRODUCT, productClass];
 
-    var idPrefix = resourceType2IdPrefix(resourceType);
-    var id = idPrefix + productId;
+    var productMainElementId = getProductMainElementId(resourceType, productId);
 
     var divElement = createElement(
         "div",
         parentElement,
         classNames,
-        id);
+        productMainElementId);
 
     return divElement;
 }
@@ -449,10 +605,14 @@ function generateProductNameElement(parentElement, productName)
 }
 
 // Generates the element that displays the product price and the shopping cart
-// image
+// image. Also adds an event listener to the shopping cart image that reacts to
+// the "click" event.
+//
+// selectElement must be present for resource types that require a selection.
+//
 // Note: The product price includes the currency sign (e.g. "42$"), so it's
 // not a number.
-function generateProductPriceAndCartElement(parentElement, productPrice)
+function generateProductPriceAndCartElement(parentElement, resourceType, product, selectElement)
 {
     var classNamesMainElement = [CLASS_PRODUCT_PRICEANDCART, CLASS_CART_LINE_PART2];
     var productPriceAndCartElement = createElement(
@@ -465,14 +625,26 @@ function generateProductPriceAndCartElement(parentElement, productPrice)
         "span",
         productPriceAndCartElement,
         classNamesSpanElement);
-    productPriceElement.innerText = productPrice;
+    productPriceElement.innerText = product.prize;  // prize - sic!
+
+    var cartAnchorElement = createElement(
+        "a",
+        productPriceAndCartElement);
+    cartAnchorElement.setAttribute("href", "#");
 
     var classNamesImgElement = [CLASS_CART_IMAGE];
     var cartImgElement = createImgElement(
-        productPriceAndCartElement,
+        cartAnchorElement,
         CART_IMAGE_URL,
         CART_IMAGE_TITLEANDALT,
         classNamesImgElement);
+
+    cartAnchorElement.addEventListener(
+        "click",
+        function()
+        {
+            shoppingCartClicked(resourceType, product, selectElement);
+        });
 
     return productPriceAndCartElement;
 }
@@ -507,6 +679,36 @@ function generateSelectElement(parentElement, resourceType)
 
     var selectElement = createSelectElement(parentElement, size, name, title, classNames);
     createOptionElements(selectElement, optionsData);
+
+    return selectElement;
+}
+
+// --------------------------------------------------------------------------------
+// Alert HTML markup generation
+// --------------------------------------------------------------------------------
+
+function createAlertSuccessElement(productId)
+{
+    var alertType = ALERT_TYPE_SUCCESS;
+    return createAlertElement(productId, alertType);
+}
+
+function createAlertErrorElement(productId)
+{
+    var alertType = ALERT_TYPE_ERROR;
+    return createAlertElement(productId, alertType);
+}
+
+function createAlertElement(productId, alertType)
+{
+    var productMainElement = getProductMainElement(productId);
+
+    var alertClass = alertType2AlertClass(alertType);
+    var classNames = [CLASS_ALERT, alertClass];
+
+    var alertElement = createElement("div", productMainElement, classNames);
+
+    return alertElement;
 }
 
 // --------------------------------------------------------------------------------
@@ -607,6 +809,27 @@ function getMainContentElement()
     var mainContentElements = document.getElementsByClassName(CLASS_MAIN_CONTENT);
     var mainContentElement = mainContentElements[0];
     return mainContentElement;
+}
+
+// Returns the top-level element that represents an entire product
+// (i.e. a pizza, a salad or a soft drink).
+function getProductMainElement(productId)
+{
+    var resourceType = getDocumentResourceType();
+    var productMainElementId = getProductMainElementId(resourceType, productId);
+
+    var productMainElement = document.getElementById(productMainElementId);
+
+    return productMainElement;
+}
+
+// Returns the ID of the block of HTML markup that represents an entire product
+// (i.e. a pizza, a salad or a soft drink).
+function getProductMainElementId(resourceType, productId)
+{
+    var idPrefix = resourceType2IdPrefix(resourceType);
+    var productMainElementId = idPrefix + productId;
+    return productMainElementId;
 }
 
 function getDocumentResourceType()
@@ -751,4 +974,66 @@ function resourceType2OptionsData(resourceType)
         default:
             throw "resourceType2OptionsData: Unknown resource type";
     }
+}
+
+function alertType2AlertClass(alertType)
+{
+    switch (alertType)
+    {
+        case ALERT_TYPE_SUCCESS:
+            return CLASS_ALERT_SUCCESS;
+        case ALERT_TYPE_ERROR:
+            return CLASS_ALERT_ERROR;
+        default:
+            throw "alertType2AlertClass: Unknown alert type";
+    }
+}
+
+// selectElement is ignored for pizzas
+function createShoppingCartData(resourceType, product, selectElement)
+{
+    switch (resourceType)
+    {
+        case RESOURCE_TYPE_PIZZA:
+        {
+            var shoppingCartDataPizza =
+                {
+                    "type" : SHOPPING_CART_DATA_TYPE_PIZZA,
+                    "name" : product.name,
+                };
+            return shoppingCartDataPizza;
+        }
+        case RESOURCE_TYPE_SALAD:
+        {
+            var shoppingCartDataSalad =
+                {
+                    "type" : SHOPPING_CART_DATA_TYPE_SALAD,
+                    "name" : product.name,
+                    "dressing" : selectElement.selectedValue,
+                };
+            return shoppingCartDataSalad;
+        }
+        case RESOURCE_TYPE_SOFTDRINK:
+        {
+            var shoppingCartDataSoftDrink =
+                {
+                    "type" : SHOPPING_CART_DATA_TYPE_SOFTDRINK,
+                    "name" : product.name,
+                    "cl" : selectElement.options[selectElement.selectedIndex].value,
+                };
+            return shoppingCartDataSoftDrink;
+        }
+        default:
+            throw "resourceType2OptionsData: Unknown resource type";
+    }
+}
+
+function createResultObject(resultText, contextData)
+{
+    var resultObject =
+        {
+            "resultText" : resultText,
+            "contextData" : contextData,
+        };
+    return resultObject;
 }
