@@ -82,6 +82,20 @@ var SELECT_NAME_SALADDRESSING = "salad-dressing";
 var SELECT_NAME_DRINKSIZE = "drink-size";
 var SELECT_TITLE_DRESSING = "Dressing";
 var SELECT_TITLE_DRINKSIZE = "Drink size";
+var SELECT_TEXT_DRESSING_ITALIAN = "Italian Dressing";
+var SELECT_TEXT_DRESSING_FRENCH = "French Dressing";
+var SELECT_TEXT_DRINKSIZE_25CL = "25cl";
+var SELECT_TEXT_DRINKSIZE_50CL = "50cl";
+var SELECT_TEXT_DRINKSIZE_100CL = "100cl";
+
+var SHOPPING_CART_DATA_TYPE_PIZZA = "pizza";
+var SHOPPING_CART_DATA_TYPE_SALAD = "salad";
+var SHOPPING_CART_DATA_TYPE_SOFTDRINK = "softdrink";
+var SHOPPING_CART_DATA_DRESSING_ITALIAN = "italian";
+var SHOPPING_CART_DATA_DRESSING_FRENCH = "french";
+var SHOPPING_CART_DATA_DRINKSIZE_25CL = "25";
+var SHOPPING_CART_DATA_DRINKSIZE_50CL = "50";
+var SHOPPING_CART_DATA_DRINKSIZE_100CL = "100";
 
 // --------------------------------------------------------------------------------
 // Script startup code
@@ -329,8 +343,9 @@ function generateHtmlMarkupForSalad(salad, parentElement)
         <p class="product-name product-line">PRODUCTNAME</p>
         <div class="cart-line product-line">
             <select size="1" name="drink-size" title="Drink size" class="drink-size cart-line-part1">
-                <option value="italian">50cl</option>
-                <option value="french">33cl</option>
+                <option value="25">25cl</option>
+                <option value="50">50cl</option>
+                <option value="100">100cl</option>
             </select>
             <p class="product-price-and-cart cart-line-part2">
                 <span class="product-price">PRODUCTPRICE</span>
@@ -704,13 +719,13 @@ function resourceType2OptionsData(resourceType)
             var optionsDataSalad =
                 [
                     {
-                        "value" : "italian",
-                        "text" : "Italian Dressing",
+                        "value" : SHOPPING_CART_DATA_DRESSING_ITALIAN,
+                        "text" : SELECT_TEXT_DRESSING_ITALIAN,
                     },
                     {
-                        "value" : "french",
-                        "text" : "French Dressing",
-                    }
+                        "value" : SHOPPING_CART_DATA_DRESSING_FRENCH,
+                        "text" : SELECT_TEXT_DRESSING_FRENCH,
+                    },
                 ];
             return optionsDataSalad;
         }
@@ -719,13 +734,17 @@ function resourceType2OptionsData(resourceType)
             var optionsDataSoftDrink =
             [
                 {
-                    "value" : "50cl",
-                    "text" : "50cl",
+                    "value" : SHOPPING_CART_DATA_DRINKSIZE_25CL,
+                    "text" : SELECT_TEXT_DRINKSIZE_25CL,
                 },
                 {
-                    "value" : "33cl",
-                    "text" : "33cl",
-                }
+                    "value" : SHOPPING_CART_DATA_DRINKSIZE_50CL,
+                    "text" : SELECT_TEXT_DRINKSIZE_50CL,
+                },
+                {
+                    "value" : SHOPPING_CART_DATA_DRINKSIZE_100CL,
+                    "text" : SELECT_TEXT_DRINKSIZE_100CL,
+                },
             ];
             return optionsDataSoftDrink;
         }
